@@ -1,3 +1,4 @@
+
 export type HeadArea = "forehead" | "temples" | "eyes" | "back_of_head" | "top_of_head" | "neck";
 
 export interface Trigger {
@@ -18,14 +19,14 @@ export interface PreSessionData {
   painIntensity: number;
   affectedAreas: HeadArea[];
   triggers: string[]; // array of trigger ids
-  notes?: string;
+  preSessionNotes?: string; // Changed from notes
   recommendedDuration: number; // in minutes
 }
 
 export interface PostSessionData {
   reliefScore: number;
   medicationTaken: boolean;
-  notes?: string;
+  postSessionNotes?: string; // Changed from notes
 }
 
 export interface TherapySession extends PreSessionData, PostSessionData {
@@ -33,6 +34,8 @@ export interface TherapySession extends PreSessionData, PostSessionData {
   startTime: string; // ISO string
   actualDuration: number; // in minutes
   endTime: string; // ISO string
+  // Ensure preSessionNotes and postSessionNotes are part of the final type
+  // This is implicitly handled by extending PreSessionData and PostSessionData
 }
 
 export interface Settings {

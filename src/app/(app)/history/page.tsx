@@ -1,15 +1,27 @@
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
 import type { TherapySession } from '@/types';
-import { getStoredSessions } from '@/lib/storage';
+import { getStoredSessions, deleteStoredSession } from '@/lib/storage';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { format, parseISO } from 'date-fns';
-import { Button } from '@/components/ui/button';
-import { Download, Filter } from 'lucide-react';
-import { Label } from '@/components/ui/label'; // Added import
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Download, Filter, Trash2 } from 'lucide-react';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 import {
   ChartContainer,
   ChartTooltip,
@@ -17,7 +29,7 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts"; // Tooltip from recharts aliased to avoid conflict
 import type { ChartConfig } from "@/components/ui/chart";
 
 const chartConfig = {
@@ -30,9 +42,12 @@ const chartConfig = {
 export default function HistoryPage() {
   const [sessions, setSessions] = useState<TherapySession[]>([]);
   const [filteredSessions, setFilteredSessions] = useState<TherapySession[]>([]);
-  const [dateFilter, setDateFilter] = useState<string>("all"); // e.g., "all", "last7", "last30"
-  const [painFilter, setPainFilter] = useState<string>("all"); // e.g., "all", "low", "medium", "high"
-  const [reliefFilter, setReliefFilter] = useState<string>("all"); // e.g., "all", "low", "medium", "high"
+  const [dateFilter, setDateFilter] = useState<string>("all");
+  const [painFilter, setPainFilter] = useState<string>("all");
+  const [reliefFilter, setReliefFilter] = useState<string>("all");
+  const [sessionToDelete, setSessionToDelete] = useState<string | null>(null);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     const loadedSessions = getStoredSessions();
@@ -42,7 +57,6 @@ export default function HistoryPage() {
   useEffect(() => {
     let tempSessions = [...sessions];
 
-    // Date filter
     if (dateFilter !== "all") {
       const now = new Date();
       const daysToSubtract = parseInt(dateFilter.replace('last',''), 10);
@@ -53,7 +67,6 @@ export default function HistoryPage() {
       });
     }
 
-    // Pain filter
     if (painFilter !== "all") {
       tempSessions = tempSessions.filter(s => {
         if (painFilter === "low") return s.painIntensity <= 3;
@@ -63,7 +76,6 @@ export default function HistoryPage() {
       });
     }
     
-    // Relief filter
     if (reliefFilter !== "all") {
       tempSessions = tempSessions.filter(s => {
         if (reliefFilter === "low") return s.reliefScore <= 3;
@@ -82,27 +94,27 @@ export default function HistoryPage() {
       painIntensity: s.painIntensity,
       reliefScore: s.reliefScore,
       actualDuration: s.actualDuration,
-    })).reverse(); // Reverse to show oldest first in chart for trend
+    })).reverse(); 
   }, [filteredSessions]);
 
   const exportToCSV = () => {
     if (filteredSessions.length === 0) return;
-    const headers = ["ID", "Start Time", "Pain Intensity", "Affected Areas", "Triggers", "Pre-Notes", "Recommended Duration", "Actual Duration", "End Time", "Relief Score", "Medication Taken", "Post-Notes"];
+    const headers = ["ID", "Start Time", "Pain Intensity", "Affected Areas", "Triggers", "Pre-Session Notes", "Recommended Duration", "Actual Duration", "End Time", "Relief Score", "Medication Taken", "Post-Session Notes"];
     const rows = filteredSessions.map(s => [
       s.id,
       format(parseISO(s.startTime), 'yyyy-MM-dd HH:mm'),
       s.painIntensity,
       s.affectedAreas.join(', '),
       s.triggers.join(', '),
-      s.notes || '',
+      s.preSessionNotes || '',
       s.recommendedDuration,
       s.actualDuration,
-      format(parseISO(s.endTime), 'yyyy-MM-dd HH:mm'),
+      s.endTime ? format(parseISO(s.endTime), 'yyyy-MM-dd HH:mm') : 'N/A',
       s.reliefScore,
       s.medicationTaken ? 'Yes' : 'No',
-      s.notes || '' // This is pre-session notes, post-session notes need to be properly split. Assuming field name for post notes.
-    ].map(String).map(v => v.replace(/"/g, '""')) // Escape double quotes
-    .map(v => `"${v}"`) // Wrap in double quotes
+      s.postSessionNotes || ''
+    ].map(String).map(v => v.replace(/"/g, '""'))
+    .map(v => `"${v}"`)
     .join(','));
     
     const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows].join('\n');
@@ -113,6 +125,21 @@ export default function HistoryPage() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleDeleteInitiation = (sessionId: string) => {
+    setSessionToDelete(sessionId);
+    setIsAlertOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (sessionToDelete) {
+      deleteStoredSession(sessionToDelete);
+      setSessions(prevSessions => prevSessions.filter(s => s.id !== sessionToDelete));
+      setSessionToDelete(null);
+      toast({ title: "Session Deleted", description: "The session has been removed from your history." });
+    }
+    setIsAlertOpen(false);
   };
 
   return (
@@ -203,6 +230,7 @@ export default function HistoryPage() {
                   <TableHead>Relief (Post)</TableHead>
                   <TableHead>Meds</TableHead>
                   <TableHead>Details</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -214,8 +242,13 @@ export default function HistoryPage() {
                     <TableCell>{session.reliefScore}</TableCell>
                     <TableCell>{session.medicationTaken ? 'Yes' : 'No'}</TableCell>
                     <TableCell>
-                      {/* Could add a modal here for full details */}
                       <Button variant="link" size="sm" onClick={() => alert(JSON.stringify(session, null, 2))}>View</Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="ghost" size="icon" onClick={() => handleDeleteInitiation(session.id)}>
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                        <span className="sr-only">Delete session</span>
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -226,6 +259,21 @@ export default function HistoryPage() {
           )}
         </CardContent>
       </Card>
+
+      <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the session from your history.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setIsAlertOpen(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete} className={buttonVariants({ variant: "destructive" })}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

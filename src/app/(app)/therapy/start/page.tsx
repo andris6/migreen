@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -56,12 +57,8 @@ export default function StartTherapyPage() {
   }, [painIntensity, form]);
   
   useEffect(() => {
-    // If pain is 0, clear affected areas validation requirement, or ensure it's empty.
-    // This specific zod schema handles it by min(0), but for complex logic, this is where it would go.
     if (painIntensity === 0) {
         form.setValue('affectedAreas', []);
-        // Potentially clear errors for affectedAreas if pain is 0
-        // form.clearErrors('affectedAreas'); 
     }
   }, [painIntensity, form]);
 
@@ -71,10 +68,9 @@ export default function StartTherapyPage() {
       painIntensity: data.painIntensity,
       affectedAreas: data.affectedAreas as HeadArea[],
       triggers: data.triggers || [],
-      notes: data.notes,
-      recommendedDuration: data.sessionDuration, // This is now user-confirmed/adjusted duration
+      preSessionNotes: data.notes, // Changed to preSessionNotes
+      recommendedDuration: data.sessionDuration,
     };
-    // Store in session storage to pass to the therapy session page
     sessionStorage.setItem('preSessionData', JSON.stringify(preSessionDetails));
     router.push('/therapy/session');
   };
@@ -172,8 +168,8 @@ export default function StartTherapyPage() {
                     render={({ field }) => (
                         <Slider
                         id="sessionDuration"
-                        min={5} // Minimum session 5 mins
-                        max={90} // Max session 90 mins
+                        min={5} 
+                        max={90} 
                         step={5}
                         value={[field.value]}
                         onValueChange={(value) => field.onChange(value[0])}
@@ -185,7 +181,7 @@ export default function StartTherapyPage() {
 
             {/* Optional Notes */}
             <div className="space-y-2">
-              <Label htmlFor="notes" className="text-lg">Optional Notes</Label>
+              <Label htmlFor="notes" className="text-lg">Optional Pre-Session Notes</Label>
               <Controller
                 name="notes"
                 control={form.control}

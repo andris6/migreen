@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -11,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import type { PreSessionData, PostSessionData, TherapySession } from '@/types';
+import type { PreSessionData, TherapySession } from '@/types'; // PostSessionData removed as its fields are in formSchema
 import { storeSession } from '@/lib/storage';
 import { useToast } from '@/hooks/use-toast';
 
@@ -45,11 +46,10 @@ export default function FeedbackPage() {
     const storedStartTime = sessionStorage.getItem('sessionStartTime');
 
     if (storedPreData && storedActualDuration && storedStartTime) {
-      setPreSessionData(JSON.parse(storedPreData));
+      setPreSessionData(JSON.parse(storedPreData) as PreSessionData);
       setActualDuration(parseInt(storedActualDuration, 10));
       setSessionStartTime(storedStartTime);
     } else {
-      // Missing data, redirect to start
       toast({ title: "Error", description: "Session data missing. Please start a new session.", variant: "destructive" });
       router.replace('/therapy/start');
     }
@@ -62,9 +62,11 @@ export default function FeedbackPage() {
     }
 
     const therapySession: TherapySession = {
-      ...preSessionData,
-      ...data,
-      id: new Date().toISOString() + Math.random().toString(36).substring(2,9), // Simple unique ID
+      ...preSessionData, // Contains preSessionNotes
+      reliefScore: data.reliefScore,
+      medicationTaken: data.medicationTaken,
+      postSessionNotes: data.notes, // Map form notes to postSessionNotes
+      id: new Date().toISOString() + Math.random().toString(36).substring(2,9),
       startTime: sessionStartTime,
       actualDuration: actualDuration,
       endTime: new Date().toISOString(),
@@ -73,7 +75,6 @@ export default function FeedbackPage() {
     storeSession(therapySession);
     toast({ title: "Session Saved", description: "Your therapy session has been logged." });
 
-    // Clean up session storage
     sessionStorage.removeItem('preSessionData');
     sessionStorage.removeItem('actualDuration');
     sessionStorage.removeItem('sessionStartTime');

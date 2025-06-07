@@ -1,3 +1,4 @@
+
 import type { TherapySession, Settings } from '@/types';
 
 const SESSIONS_KEY = 'migreen_sessions';
@@ -13,8 +14,14 @@ export function storeSession(session: TherapySession): void {
   if (typeof window === 'undefined') return;
   const sessions = getStoredSessions();
   sessions.push(session);
-  // Sort by startTime descending to have recent sessions first
   sessions.sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
+  localStorage.setItem(SESSIONS_KEY, JSON.stringify(sessions));
+}
+
+export function deleteStoredSession(sessionId: string): void {
+  if (typeof window === 'undefined') return;
+  let sessions = getStoredSessions();
+  sessions = sessions.filter(s => s.id !== sessionId);
   localStorage.setItem(SESSIONS_KEY, JSON.stringify(sessions));
 }
 

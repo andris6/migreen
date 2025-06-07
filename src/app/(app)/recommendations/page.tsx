@@ -1,9 +1,9 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
 import { Loader2, Wand2, AlertCircle } from 'lucide-react';
 import { personalizedTherapyRecommendation, type PersonalizedTherapyRecommendationOutput } from '@/ai/flows/personalized-therapy-recommendation';
 import { getStoredSessions, type TherapySession } from '@/lib/storage';
@@ -22,8 +22,8 @@ function formatSessionHistoryForAI(sessions: TherapySession[]): string {
     - Duration: ${s.actualDuration} mins
     - Relief (Post): ${s.reliefScore}/10
     - Medication Taken: ${s.medicationTaken ? 'Yes' : 'No'}
-    - Notes (Pre): ${s.notes || 'N/A'}
-    - Notes (Post): ${s.notes || 'N/A'}  // Note: The current TherapySession type has one notes field. We might need to distinguish pre/post notes.
+    - Notes (Pre-Session): ${s.preSessionNotes || 'N/A'}
+    - Notes (Post-Session): ${s.postSessionNotes || 'N/A'}
     `).join('\n\n');
 }
 
@@ -47,7 +47,7 @@ export default function RecommendationsPage() {
     setError(null);
     setRecommendations(null);
 
-    if (numSessions < 3) { // Require a minimum number of sessions for meaningful recommendations
+    if (numSessions < 3) { 
         setError("At least 3 therapy sessions are needed to generate personalized recommendations. Please log more sessions.");
         setIsLoading(false);
         return;
@@ -123,7 +123,7 @@ export default function RecommendationsPage() {
           </Button>
         </CardFooter>
       </Card>
-       {numSessions < 3 && (
+       {numSessions < 3 && !recommendations && !isLoading && ( // Only show if not already showing recommendations or loading
          <Alert variant="default" className="border-accent bg-accent/10 text-accent-foreground">
             <AlertCircle className="h-4 w-4 text-accent" />
             <AlertTitle>More Data Needed</AlertTitle>

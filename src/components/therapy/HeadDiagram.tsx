@@ -10,17 +10,20 @@ interface HeadDiagramProps {
   onChange: (selectedAreas: HeadArea[]) => void;
 }
 
-// Adjusted paths for a more human-like representation within viewBox="0 0 300 200"
+// Simplified rectangular paths for distinct clickable zones
+// Format for <path d="...">: M x,y L x+w,y L x+w,y+h L x,y+h Z
 const areas: { id: HeadArea; label: string; path: string; }[] = [
-  { id: 'top_of_head', label: 'Top of Head', path: 'M125,20 Q150,10 175,20 L185,45 Q150,35 115,45 Z' },
-  { id: 'forehead', label: 'Forehead', path: 'M100,46 L200,46 L190,75 L110,75 Z' },
-  { id: 'temples', label: 'Temple (L)', path: 'M70,70 C50,80 45,125 70,135 L90,125 C75,115 75,90 90,75 Z' },
-  { id: 'temples', label: 'Temple (R)', path: 'M230,70 C250,80 255,125 230,135 L210,125 C225,115 225,90 210,75 Z' },
-  { id: 'eyes', label: 'Eye Region (L)', path: 'M95,80 L135,80 L135,105 L95,105 Z' }, // Rectangular region for eye area
-  { id: 'eyes', label: 'Eye Region (R)', path: 'M165,80 L205,80 L205,105 L165,105 Z' }, // Rectangular region for eye area
-  { id: 'back_of_head', label: 'Back of Head', path: 'M100,130 Q150,195 200,130 L185,170 Q150,190 115,170 Z' },
-  { id: 'neck', label: 'Neck', path: 'M130,175 L170,175 L170,195 L130,195 Z' },
+  { id: 'top_of_head', label: 'Top of Head', path: 'M110,5 L190,5 L190,35 L110,35 Z' },
+  { id: 'forehead', label: 'Forehead', path: 'M100,40 L200,40 L200,70 L100,70 Z' },
+  { id: 'temples', label: 'Temple (L)', path: 'M55,75 L95,75 L95,125 L55,125 Z' },
+  { id: 'temples', label: 'Temple (R)', path: 'M205,75 L245,75 L245,125 L205,125 Z' },
+  { id: 'eyes', label: 'Eyes/Around Eyes', path: 'M100,75 L200,75 L200,105 L100,105 Z' },
+  { id: 'back_of_head', label: 'Back of Head', path: 'M90,130 L210,130 L210,180 L90,180 Z' },
+  { id: 'neck', label: 'Neck', path: 'M125,180 L175,180 L175,195 L125,195 Z' },
 ];
+
+// A more standard, less "face-like" base head outline
+const baseHeadPath = "M150,10 C80,10 40,60 40,100 C40,140 80,190 150,190 C220,190 260,140 260,100 C260,60 220,10 150,10 Z";
 
 
 export function HeadDiagram({ selectedAreas: initialSelectedAreas, onChange }: HeadDiagramProps) {
@@ -38,23 +41,19 @@ export function HeadDiagram({ selectedAreas: initialSelectedAreas, onChange }: H
     onChange(newSelected);
   };
 
-  // A more standard, less "face-like" base head outline
-  const baseHeadPath = "M150,10 C70,10 30,70 70,140 C90,180 120,195 150,195 C180,195 210,180 230,140 C270,70 230,10 150,10 Z";
-
   return (
     <div className="w-full max-w-xs mx-auto">
-      <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto" data-ai-hint="head outline human">
-        {/* Base head outline */}
+      <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto" data-ai-hint="simplified head diagram">
         <path d={baseHeadPath} 
               fill="hsl(var(--muted))" stroke="hsl(var(--border))" strokeWidth="2"/>
         
         {areas.map((area) => (
           <path
-            key={`${area.id}-${area.label}`} // Ensure unique key if ids can repeat (e.g. temples)
+            key={`${area.id}-${area.label}`} 
             d={area.path}
             fill={selected.includes(area.id) ? 'hsl(var(--accent))' : 'hsl(var(--secondary))'}
             stroke="hsl(var(--border))"
-            strokeWidth="1"
+            strokeWidth="1.5" // Slightly thicker stroke for better visibility of zones
             onClick={() => toggleArea(area.id)}
             className="cursor-pointer transition-colors duration-200 hover:opacity-80"
             aria-label={area.label}
@@ -67,4 +66,3 @@ export function HeadDiagram({ selectedAreas: initialSelectedAreas, onChange }: H
     </div>
   );
 }
-
