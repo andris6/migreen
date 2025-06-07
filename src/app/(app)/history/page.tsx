@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import type { TherapySession } from '@/types';
+import type { TherapySession, HeadArea } from '@/types';
 import { getStoredSessions, deleteStoredSession } from '@/lib/storage';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -29,7 +29,7 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts"; // Tooltip from recharts aliased to avoid conflict
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
 import type { ChartConfig } from "@/components/ui/chart";
 
 const chartConfig = {
@@ -38,6 +38,10 @@ const chartConfig = {
   actualDuration: { label: "Duration (min)", color: "hsl(var(--chart-3))" },
 } satisfies ChartConfig;
 
+function formatHeadArea(area?: HeadArea): string {
+  if (!area || area === 'none') return 'N/A';
+  return area.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}
 
 export default function HistoryPage() {
   const [sessions, setSessions] = useState<TherapySession[]>([]);
@@ -99,12 +103,12 @@ export default function HistoryPage() {
 
   const exportToCSV = () => {
     if (filteredSessions.length === 0) return;
-    const headers = ["ID", "Start Time", "Pain Intensity", "Affected Areas", "Triggers", "Pre-Session Notes", "Recommended Duration", "Actual Duration", "End Time", "Relief Score", "Medication Taken", "Post-Session Notes"];
+    const headers = ["ID", "Start Time", "Pain Intensity", "Affected Area", "Triggers", "Pre-Session Notes", "Recommended Duration", "Actual Duration", "End Time", "Relief Score", "Medication Taken", "Post-Session Notes"];
     const rows = filteredSessions.map(s => [
       s.id,
       format(parseISO(s.startTime), 'yyyy-MM-dd HH:mm'),
       s.painIntensity,
-      s.affectedAreas.join(', '),
+      s.affectedArea ? formatHeadArea(s.affectedArea) : '', // Updated
       s.triggers.join(', '),
       s.preSessionNotes || '',
       s.recommendedDuration,
@@ -226,6 +230,7 @@ export default function HistoryPage() {
                 <TableRow>
                   <TableHead>Date</TableHead>
                   <TableHead>Pain (Pre)</TableHead>
+                  <TableHead>Affected Area</TableHead>
                   <TableHead>Duration</TableHead>
                   <TableHead>Relief (Post)</TableHead>
                   <TableHead>Meds</TableHead>
@@ -238,6 +243,7 @@ export default function HistoryPage() {
                   <TableRow key={session.id}>
                     <TableCell>{format(parseISO(session.startTime), 'MMM d, yyyy HH:mm')}</TableCell>
                     <TableCell>{session.painIntensity}</TableCell>
+                    <TableCell>{formatHeadArea(session.affectedArea)}</TableCell>
                     <TableCell>{session.actualDuration} min</TableCell>
                     <TableCell>{session.reliefScore}</TableCell>
                     <TableCell>{session.medicationTaken ? 'Yes' : 'No'}</TableCell>

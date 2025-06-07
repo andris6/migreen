@@ -1,3 +1,4 @@
+
 import { Logo } from '@/components/layout/Logo';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -22,7 +23,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
-        <Logo />
+        <Logo className="ml-0 md:ml-2" /> {/* Added ml-2 for medium screens and up, default ml-0 for small */}
         <div className="hidden md:flex items-center space-x-4">
           <NavLinks />
         </div>
@@ -48,7 +49,7 @@ export function Header() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[280px] p-6">
-                <Logo />
+                <Logo className="ml-2"/> {/* Added ml-2 for mobile sheet */}
                 <div className="mt-6 flex flex-col space-y-3">
                   <NavLinks isMobile={true} />
                 </div>

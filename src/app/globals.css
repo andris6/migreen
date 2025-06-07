@@ -1,99 +1,99 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 120 17% 95%; /* Light grayish-green (#F0F4F0) */
-    --foreground: 120 10% 20%; /* Dark grayish-green for text */
+    --background: 150 25% 97%; /* Lighter, very soft cool mint */
+    --foreground: 150 15% 10%; /* Dark, slightly desaturated cool mint for text */
 
-    --card: 120 17% 97%;
-    --card-foreground: 120 10% 20%;
+    --card: 150 25% 98%; /* Slightly off-background */
+    --card-foreground: 150 15% 10%;
 
-    --popover: 120 17% 97%;
-    --popover-foreground: 120 10% 20%;
+    --popover: 150 25% 98%;
+    --popover-foreground: 150 15% 10%;
 
-    --primary: 127 32% 73%; /* Soft green (#A7D1AB) */
-    --primary-foreground: 127 30% 25%; /* Darker green for text on primary */
+    --primary: 145 58% 42%; /* Clearer, slightly deeper green */
+    --primary-foreground: 145 50% 96%; /* Very light green/white for text on primary */
 
-    --secondary: 120 20% 90%; /* Slightly darker shade of background */
-    --secondary-foreground: 120 10% 20%;
+    --secondary: 150 20% 92%; /* Slightly darker/muted than background */
+    --secondary-foreground: 150 15% 20%;
 
-    --muted: 120 15% 88%;
-    --muted-foreground: 120 10% 40%;
+    --muted: 150 20% 90%;
+    --muted-foreground: 150 10% 45%;
 
-    --accent: 160 30% 85%; /* Light Muted Teal (#C4E0D8) */
-    --accent-foreground: 160 30% 25%; /* Dark Teal for text on accent */
+    --accent: 185 65% 50%; /* Brighter, distinct cyan-blue */
+    --accent-foreground: 185 60% 97%; /* Very light for text on accent */
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 70% 55%; /* Slightly softer red */
     --destructive-foreground: 0 0% 98%;
 
-    --border: 120 15% 85%;
-    --input: 120 15% 85%;
-    --ring: 127 32% 65%; /* Slightly darker/muted primary for ring */
+    --border: 150 20% 88%;
+    --input: 150 20% 88%;
+    --ring: 145 58% 50%; /* Based on new primary */
 
-    --radius: 0.8rem; /* Increased for Material 3 feel */
+    --radius: 0.8rem;
 
-    --chart-1: 127 32% 73%;
-    --chart-2: 160 30% 85%; /* Updated to new accent */
-    --chart-3: 120 20% 80%;
-    --chart-4: 127 32% 60%;
-    --chart-5: 45 62% 75%; /* Kept one distinct color, can be updated if needed */
+    --chart-1: 145 58% 55%; /* Primary variant for charts */
+    --chart-2: 185 65% 60%; /* Accent variant for charts */
+    --chart-3: 150 30% 70%; /* Muted green/gray */
+    --chart-4: 145 58% 70%; /* Lighter Primary variant */
+    --chart-5: 210 60% 65%; /* A complementary blue */
 
-    /* Sidebar specific colors (can be adjusted or inherit from main theme) */
-    --sidebar-background: 120 17% 92%; /* Slightly different from main background */
-    --sidebar-foreground: 120 10% 25%;
-    --sidebar-primary: 127 32% 68%;
-    --sidebar-primary-foreground: 127 30% 20%;
-    --sidebar-accent: 160 30% 82%; /* Light Muted Teal for sidebar */
-    --sidebar-accent-foreground: 160 30% 22%; /* Dark Teal for sidebar text */
-    --sidebar-border: 120 15% 82%;
-    --sidebar-ring: 127 32% 60%;
+    --sidebar-background: 150 25% 95%;
+    --sidebar-foreground: 150 15% 15%;
+    --sidebar-primary: 145 58% 50%;
+    --sidebar-primary-foreground: 145 50% 95%;
+    --sidebar-accent: 185 65% 55%;
+    --sidebar-accent-foreground: 185 60% 96%;
+    --sidebar-border: 150 20% 85%;
+    --sidebar-ring: 145 58% 45%;
   }
 
   .dark {
-    --background: 120 10% 10%;
-    --foreground: 120 15% 85%;
+    --background: 150 10% 8%; /* Dark, cool mint base */
+    --foreground: 150 20% 90%; /* Light, soft cool mint for text */
 
-    --card: 120 10% 12%;
-    --card-foreground: 120 15% 85%;
+    --card: 150 10% 10%;
+    --card-foreground: 150 20% 90%;
 
-    --popover: 120 10% 12%;
-    --popover-foreground: 120 15% 85%;
+    --popover: 150 10% 10%;
+    --popover-foreground: 150 20% 90%;
 
-    --primary: 127 28% 60%;
-    --primary-foreground: 127 25% 15%;
+    --primary: 145 50% 58%; /* Vibrant green for dark mode */
+    --primary-foreground: 145 40% 8%; /* Very dark for text on primary */
 
-    --secondary: 120 10% 15%;
-    --secondary-foreground: 120 15% 85%;
+    --secondary: 150 10% 12%;
+    --secondary-foreground: 150 20% 85%;
 
-    --muted: 120 10% 20%;
-    --muted-foreground: 120 15% 65%;
+    --muted: 150 10% 15%;
+    --muted-foreground: 150 15% 60%;
 
-    --accent: 160 25% 65%; /* Muted Teal (#8EAEA3) */
-    --accent-foreground: 160 25% 15%; /* Very Dark Teal for text on accent */
-
-    --destructive: 0 62.8% 30.6%;
+    --accent: 185 55% 60%; /* Clear cyan-blue for dark mode */
+    --accent-foreground: 185 50% 8%; /* Very dark for text on accent */
+    
+    --destructive: 0 60% 50%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 120 10% 25%;
-    --input: 120 10% 25%;
-    --ring: 127 28% 55%;
+    --border: 150 10% 20%;
+    --input: 150 10% 20%;
+    --ring: 145 50% 50%; /* Based on new dark primary */
 
-    --chart-1: 127 28% 60%;
-    --chart-2: 160 25% 65%; /* Updated to new accent */
-    --chart-3: 120 15% 50%;
-    --chart-4: 127 28% 50%;
-    --chart-5: 45 50% 60%; /* Kept one distinct color, can be updated if needed */
-    
-    --sidebar-background: 120 10% 8%;
-    --sidebar-foreground: 120 15% 80%;
-    --sidebar-primary: 127 28% 55%;
-    --sidebar-primary-foreground: 127 25% 10%;
-    --sidebar-accent: 160 25% 62%; /* Muted Teal for dark sidebar */
-    --sidebar-accent-foreground: 160 25% 12%; /* Very Dark Teal for dark sidebar text */
-    --sidebar-border: 120 10% 22%;
-    --sidebar-ring: 127 28% 50%;
+    --chart-1: 145 50% 65%; /* Primary variant for charts */
+    --chart-2: 185 55% 70%; /* Accent variant for charts */
+    --chart-3: 150 20% 50%; /* Muted green/gray */
+    --chart-4: 145 50% 45%; /* Darker Primary variant */
+    --chart-5: 210 50% 55%; /* A complementary blue for dark */
+
+    --sidebar-background: 150 10% 6%;
+    --sidebar-foreground: 150 20% 88%;
+    --sidebar-primary: 145 50% 55%;
+    --sidebar-primary-foreground: 145 40% 10%;
+    --sidebar-accent: 185 55% 58%;
+    --sidebar-accent-foreground: 185 50% 12%;
+    --sidebar-border: 150 10% 18%;
+    --sidebar-ring: 145 50% 48%;
   }
 }
 
@@ -103,6 +103,5 @@
   }
   body {
     @apply bg-background text-foreground;
-    /* Font family will be applied via tailwind.config.ts and layout.tsx */
   }
 }

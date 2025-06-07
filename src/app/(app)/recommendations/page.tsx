@@ -6,9 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Loader2, Wand2, AlertCircle } from 'lucide-react';
 import { personalizedTherapyRecommendation, type PersonalizedTherapyRecommendationOutput } from '@/ai/flows/personalized-therapy-recommendation';
-import { getStoredSessions, type TherapySession } from '@/lib/storage';
+import { getStoredSessions, type TherapySession, type HeadArea } from '@/lib/storage';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
+
+function formatHeadAreaForAI(area?: HeadArea): string {
+  if (!area || area === 'none') return 'N/A';
+  return area.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}
 
 function formatSessionHistoryForAI(sessions: TherapySession[]): string {
   if (sessions.length === 0) {
@@ -17,7 +22,7 @@ function formatSessionHistoryForAI(sessions: TherapySession[]): string {
   return sessions.map(s => 
     `Session on ${new Date(s.startTime).toLocaleDateString()}:
     - Pain (Pre): ${s.painIntensity}/10
-    - Affected Areas: ${s.affectedAreas.join(', ') || 'N/A'}
+    - Affected Area: ${formatHeadAreaForAI(s.affectedArea)}
     - Triggers: ${s.triggers.join(', ') || 'N/A'}
     - Duration: ${s.actualDuration} mins
     - Relief (Post): ${s.reliefScore}/10

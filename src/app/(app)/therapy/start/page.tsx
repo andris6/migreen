@@ -12,18 +12,26 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
-import { HeadDiagram } from '@/components/therapy/HeadDiagram';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import type { HeadArea, PreSessionData } from '@/types';
-import { availableTriggers } from '@/types';
+import { availableTriggers, availableHeadAreas } from '@/types';
 import { Info } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const formSchema = z.object({
   painIntensity: z.number().min(0).max(10),
-  affectedAreas: z.array(z.string()).min(0, "Please select at least one affected area if pain intensity > 0."),
+  affectedArea: z.string().optional(), // Changed from array
   triggers: z.array(z.string()).optional(),
   notes: z.string().max(500, "Notes must be 500 characters or less.").optional(),
   sessionDuration: z.number().min(5).max(90),
+}).refine(data => {
+  if (data.painIntensity > 0 && !data.affectedArea) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Please select an affected area if pain intensity is greater than 0.",
+  path: ["affectedArea"],
 });
 
 type PreSessionFormValues = z.infer<typeof formSchema>;
@@ -36,7 +44,7 @@ export default function StartTherapyPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       painIntensity: 0,
-      affectedAreas: [],
+      affectedArea: undefined,
       triggers: [],
       notes: '',
       sessionDuration: 30,
@@ -48,27 +56,26 @@ export default function StartTherapyPage() {
   useEffect(() => {
     let newDuration = 20; // Default for pain 0-3
     if (painIntensity >= 7) {
-      newDuration = 60; // For pain 7-10, default to 60 (user can select up to 90)
+      newDuration = 60;
     } else if (painIntensity >= 4) {
-      newDuration = 45; // For pain 4-6
+      newDuration = 45;
     }
     setRecommendedDuration(newDuration);
     form.setValue('sessionDuration', newDuration);
+    if (painIntensity === 0) {
+        form.setValue('affectedArea', 'none'); // Default to 'none' if no pain
+    } else if (painIntensity > 0 && form.getValues('affectedArea') === 'none') {
+        form.setValue('affectedArea', undefined); // Clear 'none' if pain is present
+    }
+
   }, [painIntensity, form]);
   
-  useEffect(() => {
-    if (painIntensity === 0) {
-        form.setValue('affectedAreas', []);
-    }
-  }, [painIntensity, form]);
-
-
   const onSubmit = (data: PreSessionFormValues) => {
     const preSessionDetails: PreSessionData = {
       painIntensity: data.painIntensity,
-      affectedAreas: data.affectedAreas as HeadArea[],
+      affectedArea: data.affectedArea as HeadArea | undefined,
       triggers: data.triggers || [],
-      preSessionNotes: data.notes, // Changed to preSessionNotes
+      preSessionNotes: data.notes,
       recommendedDuration: data.sessionDuration,
     };
     sessionStorage.setItem('preSessionData', JSON.stringify(preSessionDetails));
@@ -86,7 +93,7 @@ export default function StartTherapyPage() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             {/* Pain Intensity */}
             <div className="space-y-2">
-              <Label htmlFor="painIntensity" className="text-lg">Pain Intensity: {form.getValues('painIntensity')}/10</Label>
+              <Label htmlFor="painIntensity" className="text-lg">Pain Intensity: {form.watch('painIntensity')}/10</Label>
               <Controller
                 name="painIntensity"
                 control={form.control}
@@ -104,22 +111,30 @@ export default function StartTherapyPage() {
               />
             </div>
 
-            {/* Affected Head Areas */}
+            {/* Affected Head Areas with Radio Buttons */}
             {painIntensity > 0 && (
               <div className="space-y-2">
-                <Label className="text-lg">Affected Head Areas</Label>
-                 <Controller
-                    name="affectedAreas"
-                    control={form.control}
-                    render={({ field }) => (
-                        <HeadDiagram
-                        selectedAreas={field.value as HeadArea[]}
-                        onChange={field.onChange}
-                        />
-                    )}
-                    />
-                {form.formState.errors.affectedAreas && (
-                  <p className="text-sm text-destructive">{form.formState.errors.affectedAreas.message}</p>
+                <Label className="text-lg">Affected Head Area</Label>
+                <Controller
+                  name="affectedArea"
+                  control={form.control}
+                  render={({ field }) => (
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3"
+                    >
+                      {availableHeadAreas.filter(area => area.id !== 'none').map((area) => (
+                        <div key={area.id} className="flex items-center space-x-2">
+                          <RadioGroupItem value={area.id} id={`area-${area.id}`} />
+                          <Label htmlFor={`area-${area.id}`} className="font-normal">{area.name}</Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  )}
+                />
+                {form.formState.errors.affectedArea && (
+                  <p className="text-sm text-destructive">{form.formState.errors.affectedArea.message}</p>
                 )}
               </div>
             )}
@@ -127,7 +142,7 @@ export default function StartTherapyPage() {
             {/* Potential Triggers */}
             <div className="space-y-2">
               <Label className="text-lg">Potential Triggers</Label>
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
                 {availableTriggers.map((trigger) => (
                   <Controller
                     key={trigger.id}
