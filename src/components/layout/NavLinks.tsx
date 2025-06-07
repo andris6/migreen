@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -21,10 +22,17 @@ const navItems: NavItem[] = [
 
 interface NavLinksProps {
   isMobile?: boolean;
+  onMobileLinkClick?: () => void; // New prop to handle mobile link clicks
 }
 
-export default function NavLinks({ isMobile = false }: NavLinksProps) {
+export default function NavLinks({ isMobile = false, onMobileLinkClick }: NavLinksProps) {
   const pathname = usePathname();
+
+  const handleClick = () => {
+    if (isMobile && onMobileLinkClick) {
+      onMobileLinkClick();
+    }
+  };
 
   return (
     <>
@@ -32,6 +40,7 @@ export default function NavLinks({ isMobile = false }: NavLinksProps) {
         <Link
           key={item.href}
           href={item.href}
+          onClick={handleClick} // Call handleClick on link click
           className={cn(
             'flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground',
             pathname === item.href ? 'bg-accent text-accent-foreground' : 'text-foreground/70',

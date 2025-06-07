@@ -16,14 +16,35 @@ interface HeaderProps {
 export function Header({ className: propClassName }: HeaderProps) {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   if (!mounted) {
-    return null;
+    // Return a basic structure or null if preferred, to avoid flash of unstyled content
+    // or to ensure client-side logic dependent on `mounted` doesn't run prematurely.
+    // For a header, returning null might be acceptable if it's okay for it not to render SSR.
+    return (
+      <header className={cn(
+        "sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        propClassName
+      )}>
+        <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
+          <Logo className="ml-8 md:ml-8" />
+          <div className="flex items-center space-x-3 mr-4">
+            {/* Placeholder for icons to prevent layout shift if theme/settings icons are important for SSR */}
+          </div>
+        </div>
+      </header>
+    );
   }
+
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <header className={cn(
@@ -31,7 +52,7 @@ export function Header({ className: propClassName }: HeaderProps) {
       propClassName
     )}>
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
-        <Logo className="ml-8 md:ml-8" /> {/* Increased ml-6 to ml-8 for more padding */}
+        <Logo className="ml-8 md:ml-8" />
         <div className="hidden md:flex items-center space-x-4">
           <NavLinks />
         </div>
@@ -51,7 +72,7 @@ export function Header({ className: propClassName }: HeaderProps) {
             </Button>
           </Link>
           <div className="md:hidden">
-            <Sheet>
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" aria-label="Open menu" className="group">
                   <Menu className="h-6 w-6 text-accent group-hover:text-accent-foreground" />
@@ -59,9 +80,9 @@ export function Header({ className: propClassName }: HeaderProps) {
               </SheetTrigger>
               <SheetContent side="right" className="w-[280px] p-6">
                 <SheetTitle className="sr-only">Menu</SheetTitle>
-                <Logo className="ml-8"/> {/* Increased ml-6 to ml-8 for more padding */}
+                <Logo className="ml-8"/>
                 <div className="mt-6 flex flex-col space-y-3">
-                  <NavLinks isMobile={true} />
+                  <NavLinks isMobile={true} onMobileLinkClick={closeMobileMenu} />
                 </div>
               </SheetContent>
             </Sheet>
