@@ -7,8 +7,13 @@ import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import NavLinks from './NavLinks';
+import { cn } from '@/lib/utils';
 
-export function Header() {
+interface HeaderProps {
+  className?: string;
+}
+
+export function Header({ className: propClassName }: HeaderProps) {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -17,13 +22,16 @@ export function Header() {
   }, []);
 
   if (!mounted) {
-    return null; 
+    return null;
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className={cn(
+      "sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+      propClassName
+    )}>
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
-        <Logo className="ml-6 md:ml-8" />
+        <Logo className="ml-8 md:ml-8" /> {/* Increased ml-6 to ml-8 for more padding */}
         <div className="hidden md:flex items-center space-x-4">
           <NavLinks />
         </div>
@@ -51,7 +59,7 @@ export function Header() {
               </SheetTrigger>
               <SheetContent side="right" className="w-[280px] p-6">
                 <SheetTitle className="sr-only">Menu</SheetTitle>
-                <Logo className="ml-6"/>
+                <Logo className="ml-8"/> {/* Increased ml-6 to ml-8 for more padding */}
                 <div className="mt-6 flex flex-col space-y-3">
                   <NavLinks isMobile={true} />
                 </div>
