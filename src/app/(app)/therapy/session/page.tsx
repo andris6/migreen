@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
@@ -33,19 +34,29 @@ export default function TherapySessionPage() {
     // Prevent screen sleep (best effort, browser support varies)
     let wakeLock: WakeLockSentinel | null = null;
     const requestWakeLock = async () => {
-      if ('wakeLock' in navigator) {
+      if ('wakeLock' in navigator && navigator.wakeLock) {
         try {
           wakeLock = await navigator.wakeLock.request('screen');
+          // console.log('Screen Wake Lock activated.'); // Optional: for debugging success
         } catch (err) {
-          console.error(`${(err as Error).name}, ${(err as Error).message}`);
+          console.warn(
+            `Screen Wake Lock request failed: ${(err as Error).name} - ${(err as Error).message}. ` +
+            `This can occur if permissions are denied or the feature is unsupported in the current context (e.g., an iframe missing the 'screen-wake-lock' policy). ` +
+            `The screen may turn off during the session.`
+          );
         }
+      } else {
+        console.warn('Screen Wake Lock API is not supported in this browser or context. The screen may turn off.');
       }
     };
     requestWakeLock();
 
     return () => {
       if (wakeLock) {
-        wakeLock.release().catch(() => {});
+        wakeLock.release().catch((err) => {
+          // Silently catch release errors, or log if needed for debugging
+          // console.warn('Failed to release wake lock:', (err as Error).message);
+        });
       }
     };
   }, [router]);
