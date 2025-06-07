@@ -1,7 +1,7 @@
 
 import { Logo } from '@/components/layout/Logo';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { Menu, Settings, Sun, Moon } from 'lucide-react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
@@ -27,29 +27,30 @@ export function Header() {
         <div className="hidden md:flex items-center space-x-4">
           <NavLinks />
         </div>
-        <div className="flex items-center space-x-3 mr-4"> {/* Adjusted spacing and added margin */}
+        <div className="flex items-center space-x-3 mr-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             aria-label="Toggle theme"
-            className="group" // Added group for hover effect on icon
+            className="group"
           >
             {theme === 'dark' ? <Sun className="h-5 w-5 text-accent group-hover:text-accent-foreground" /> : <Moon className="h-5 w-5 text-accent group-hover:text-accent-foreground" />}
           </Button>
           <Link href="/settings" passHref>
-            <Button variant="ghost" size="icon" aria-label="Settings" className="group"> {/* Added group for hover effect on icon */}
+            <Button variant="ghost" size="icon" aria-label="Settings" className="group">
               <Settings className="h-5 w-5 text-accent group-hover:text-accent-foreground" />
             </Button>
           </Link>
           <div className="md:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" aria-label="Open menu" className="group"> {/* Added group for hover effect on icon */}
+                <Button variant="ghost" size="icon" aria-label="Open menu" className="group">
                   <Menu className="h-6 w-6 text-accent group-hover:text-accent-foreground" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[280px] p-6">
+                <SheetTitle className="sr-only">Menu</SheetTitle>
                 <Logo className="ml-6"/>
                 <div className="mt-6 flex flex-col space-y-3">
                   <NavLinks isMobile={true} />
