@@ -10,16 +10,16 @@ interface HeadDiagramProps {
   onChange: (selectedAreas: HeadArea[]) => void;
 }
 
-// Simplified representation of head areas with corrected paths
+// Adjusted paths for a more human-like representation within viewBox="0 0 300 200"
 const areas: { id: HeadArea; label: string; path: string; }[] = [
-  { id: 'top_of_head', label: 'Top of Head', path: 'M125,20 Q150,10 175,20 L180,45 Q150,40 120,45 Z' },
-  { id: 'forehead', label: 'Forehead', path: 'M100,48 L200,48 L195,78 L105,78 Z' },
-  { id: 'temples', label: 'Temple (L)', path: 'M80,60 C60,70 55,110 75,120 L90,115 C75,100 75,80 90,65 Z' },
-  { id: 'temples', label: 'Temple (R)', path: 'M220,60 C240,70 245,110 225,120 L210,115 C225,100 225,80 210,65 Z' },
-  { id: 'eyes', label: 'Eye (L)', path: 'M110,82 A15,10 0 1,1 110,102 A15,10 0 1,1 110,82 Z' },
-  { id: 'eyes', label: 'Eye (R)', path: 'M190,82 A15,10 0 1,1 190,102 A15,10 0 1,1 190,82 Z' },
-  { id: 'back_of_head', label: 'Back of Head', path: 'M100,125 Q150,190 200,125 L190,165 Q150,185 110,165 Z' },
-  { id: 'neck', label: 'Neck', path: 'M130,170 L170,170 L165,195 L135,195 Z' },
+  { id: 'top_of_head', label: 'Top of Head', path: 'M125,20 Q150,10 175,20 L185,45 Q150,35 115,45 Z' },
+  { id: 'forehead', label: 'Forehead', path: 'M100,46 L200,46 L190,75 L110,75 Z' },
+  { id: 'temples', label: 'Temple (L)', path: 'M70,70 C50,80 45,125 70,135 L90,125 C75,115 75,90 90,75 Z' },
+  { id: 'temples', label: 'Temple (R)', path: 'M230,70 C250,80 255,125 230,135 L210,125 C225,115 225,90 210,75 Z' },
+  { id: 'eyes', label: 'Eye Region (L)', path: 'M95,80 L135,80 L135,105 L95,105 Z' }, // Rectangular region for eye area
+  { id: 'eyes', label: 'Eye Region (R)', path: 'M165,80 L205,80 L205,105 L165,105 Z' }, // Rectangular region for eye area
+  { id: 'back_of_head', label: 'Back of Head', path: 'M100,130 Q150,195 200,130 L185,170 Q150,190 115,170 Z' },
+  { id: 'neck', label: 'Neck', path: 'M130,175 L170,175 L170,195 L130,195 Z' },
 ];
 
 
@@ -38,11 +38,14 @@ export function HeadDiagram({ selectedAreas: initialSelectedAreas, onChange }: H
     onChange(newSelected);
   };
 
+  // A more standard, less "face-like" base head outline
+  const baseHeadPath = "M150,10 C70,10 30,70 70,140 C90,180 120,195 150,195 C180,195 210,180 230,140 C270,70 230,10 150,10 Z";
+
   return (
     <div className="w-full max-w-xs mx-auto">
-      <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto" data-ai-hint="head outline">
+      <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto" data-ai-hint="head outline human">
         {/* Base head outline */}
-        <path d="M150,20 C 80,20 60,80 80,140 C 90,180 120,200 150,200 C 180,200 210,180 220,140 C 240,80 220,20 150,20 Z" 
+        <path d={baseHeadPath} 
               fill="hsl(var(--muted))" stroke="hsl(var(--border))" strokeWidth="2"/>
         
         {areas.map((area) => (
