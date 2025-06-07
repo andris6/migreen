@@ -109,21 +109,19 @@ export default function TherapySessionPage() {
 
   return (
     <div 
-      className="fixed inset-0 flex flex-col items-center justify-center p-4 transition-colors duration-500"
+      className="fixed inset-0 p-4 transition-colors duration-500"
       style={{ backgroundColor: GREEN_LIGHT_COLOR }}
       role="application"
       aria-label="Green light therapy session active"
     >
-      <div className="text-center">
-        <h1 
-            className="text-8xl md:text-9xl font-mono font-bold mb-12"
-            style={{ color: '#FFFFFF', textShadow: '0 0 10px rgba(0,0,0,0.3)' }}
-            aria-live="polite"
-            aria-atomic="true"
-        >
-          {formatTime(timeLeft)}
-        </h1>
-      </div>
+      <h1 
+          className="absolute top-4 left-4 text-4xl font-mono font-bold"
+          style={{ color: '#FFFFFF', textShadow: '0 0 10px rgba(0,0,0,0.3)' }}
+          aria-live="polite"
+          aria-atomic="true"
+      >
+        {formatTime(timeLeft)}
+      </h1>
       
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-48">
         <LongPressButton
@@ -136,7 +134,7 @@ export default function TherapySessionPage() {
         </LongPressButton>
       </div>
 
-      <Card className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm border-white/30 text-white max-w-xs p-0">
+      <Card className="absolute top-20 right-4 bg-white/20 backdrop-blur-sm border-white/30 text-white max-w-xs p-0">
         <CardContent className="p-3">
           <div className="flex items-start space-x-2">
             <AlertTriangle className="h-5 w-5 mt-0.5 text-yellow-300" />
