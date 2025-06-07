@@ -10,8 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Inter', 'sans-serif'],
-        headline: ['Inter', 'sans-serif'],
+        body: ['PT Sans', 'sans-serif'],
+        headline: ['PT Sans', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
@@ -67,9 +67,9 @@ export default {
         },
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        lg: 'var(--radius)', // Uses 0.8rem from globals.css
+        md: 'calc(var(--radius) - 0.2rem)', // 0.6rem
+        sm: 'calc(var(--radius) - 0.4rem)', // 0.4rem
       },
       keyframes: {
         'accordion-down': {
