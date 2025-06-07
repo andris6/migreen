@@ -23,9 +23,6 @@ export function Header({ className: propClassName }: HeaderProps) {
   }, []);
 
   if (!mounted) {
-    // Return a basic structure or null if preferred, to avoid flash of unstyled content
-    // or to ensure client-side logic dependent on `mounted` doesn't run prematurely.
-    // For a header, returning null might be acceptable if it's okay for it not to render SSR.
     return (
       <header className={cn(
         "sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
@@ -34,13 +31,11 @@ export function Header({ className: propClassName }: HeaderProps) {
         <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
           <Logo className="ml-8 md:ml-8" />
           <div className="flex items-center space-x-3 mr-4">
-            {/* Placeholder for icons to prevent layout shift if theme/settings icons are important for SSR */}
           </div>
         </div>
       </header>
     );
   }
-
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
