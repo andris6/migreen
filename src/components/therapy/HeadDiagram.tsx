@@ -49,7 +49,7 @@ export function HeadDiagram({ selectedAreas: initialSelectedAreas, onChange }: H
             key={`${area.id}-${area.label}`} // Ensure unique key if ids can repeat (e.g. temples)
             d={area.path}
             transform={area.transform}
-            fill={selected.includes(area.id) ? 'hsl(var(--primary))' : 'hsl(var(--secondary))'}
+            fill={selected.includes(area.id) ? 'hsl(var(--accent))' : 'hsl(var(--secondary))'}
             stroke="hsl(var(--border))"
             strokeWidth="1"
             onClick={() => toggleArea(area.id)}

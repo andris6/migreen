@@ -22,8 +22,8 @@
     --muted: 120 15% 88%;
     --muted-foreground: 120 10% 40%;
 
-    --accent: 45 62% 87%; /* Pale Yellow (#F2E8C9) */
-    --accent-foreground: 45 40% 30%; /* Darker yellow/brown for text on accent */
+    --accent: 160 30% 85%; /* Light Muted Teal (#C4E0D8) */
+    --accent-foreground: 160 30% 25%; /* Dark Teal for text on accent */
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
@@ -35,18 +35,18 @@
     --radius: 0.8rem; /* Increased for Material 3 feel */
 
     --chart-1: 127 32% 73%;
-    --chart-2: 45 62% 87%;
+    --chart-2: 160 30% 85%; /* Updated to new accent */
     --chart-3: 120 20% 80%;
     --chart-4: 127 32% 60%;
-    --chart-5: 45 62% 75%;
+    --chart-5: 45 62% 75%; /* Kept one distinct color, can be updated if needed */
 
     /* Sidebar specific colors (can be adjusted or inherit from main theme) */
     --sidebar-background: 120 17% 92%; /* Slightly different from main background */
     --sidebar-foreground: 120 10% 25%;
     --sidebar-primary: 127 32% 68%;
     --sidebar-primary-foreground: 127 30% 20%;
-    --sidebar-accent: 45 60% 85%;
-    --sidebar-accent-foreground: 45 40% 25%;
+    --sidebar-accent: 160 30% 82%; /* Light Muted Teal for sidebar */
+    --sidebar-accent-foreground: 160 30% 22%; /* Dark Teal for sidebar text */
     --sidebar-border: 120 15% 82%;
     --sidebar-ring: 127 32% 60%;
   }
@@ -70,8 +70,8 @@
     --muted: 120 10% 20%;
     --muted-foreground: 120 15% 65%;
 
-    --accent: 45 50% 70%;
-    --accent-foreground: 45 35% 20%;
+    --accent: 160 25% 65%; /* Muted Teal (#8EAEA3) */
+    --accent-foreground: 160 25% 15%; /* Very Dark Teal for text on accent */
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
@@ -81,17 +81,17 @@
     --ring: 127 28% 55%;
 
     --chart-1: 127 28% 60%;
-    --chart-2: 45 50% 70%;
+    --chart-2: 160 25% 65%; /* Updated to new accent */
     --chart-3: 120 15% 50%;
     --chart-4: 127 28% 50%;
-    --chart-5: 45 50% 60%;
+    --chart-5: 45 50% 60%; /* Kept one distinct color, can be updated if needed */
     
     --sidebar-background: 120 10% 8%;
     --sidebar-foreground: 120 15% 80%;
     --sidebar-primary: 127 28% 55%;
     --sidebar-primary-foreground: 127 25% 10%;
-    --sidebar-accent: 45 50% 65%;
-    --sidebar-accent-foreground: 45 35% 15%;
+    --sidebar-accent: 160 25% 62%; /* Muted Teal for dark sidebar */
+    --sidebar-accent-foreground: 160 25% 12%; /* Very Dark Teal for dark sidebar text */
     --sidebar-border: 120 10% 22%;
     --sidebar-ring: 127 28% 50%;
   }
