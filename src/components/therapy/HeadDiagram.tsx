@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { HeadArea } from '@/types';
@@ -9,16 +10,16 @@ interface HeadDiagramProps {
   onChange: (selectedAreas: HeadArea[]) => void;
 }
 
-// Simplified representation of head areas
-const areas: { id: HeadArea; label: string; path: string; viewBox?: string, transform?: string }[] = [
-  { id: 'forehead', label: 'Forehead', path: 'M100,50 Q150,30 200,50 Q220,100 150,120 Q80,100 100,50 Z', transform: "translate(0, -10) scale(0.9)"},
-  { id: 'temples', label: 'Temples (L)', path: 'M80,70 Q60,90 80,110 L95,105 Q75,85 95,75 Z', transform: "translate(-10,0) scale(0.9)" },
-  { id: 'temples', label: 'Temples (R)', path: 'M220,70 Q240,90 220,110 L205,105 Q225,85 205,75 Z', transform: "translate(10,0) scale(0.9)" },
-  { id: 'eyes', label: 'Eyes (L)', path: 'M110,75 A20,15 0 1,1 110,105 A20,15 0 1,1 110,75 Z', transform: "translate(-5, 0) scale(0.8)" },
-  { id: 'eyes', label: 'Eyes (R)', path: 'M190,75 A20,15 0 1,1 190,105 A20,15 0 1,1 190,75 Z', transform: "translate(5, 0) scale(0.8)" },
-  { id: 'back_of_head', label: 'Back of Head', path: 'M100,130 Q150,180 200,130 L180,120 Q150,150 120,120 Z', transform:"scale(1.1) translate(0,5)" },
-  { id: 'top_of_head', label: 'Top of Head', path: 'M120,30 Q150,10 180,30 L170,40 Q150,25 130,40 Z', transform:"scale(1) translate(0,-15)"},
-  { id: 'neck', label: 'Neck', path: 'M125,150 Q150,170 175,150 L160,160 Q150,165 140,160 Z', transform:"scale(1.2) translate(0,15)" },
+// Simplified representation of head areas with corrected paths
+const areas: { id: HeadArea; label: string; path: string; }[] = [
+  { id: 'top_of_head', label: 'Top of Head', path: 'M125,20 Q150,10 175,20 L180,45 Q150,40 120,45 Z' },
+  { id: 'forehead', label: 'Forehead', path: 'M100,48 L200,48 L195,78 L105,78 Z' },
+  { id: 'temples', label: 'Temple (L)', path: 'M80,60 C60,70 55,110 75,120 L90,115 C75,100 75,80 90,65 Z' },
+  { id: 'temples', label: 'Temple (R)', path: 'M220,60 C240,70 245,110 225,120 L210,115 C225,100 225,80 210,65 Z' },
+  { id: 'eyes', label: 'Eye (L)', path: 'M110,82 A15,10 0 1,1 110,102 A15,10 0 1,1 110,82 Z' },
+  { id: 'eyes', label: 'Eye (R)', path: 'M190,82 A15,10 0 1,1 190,102 A15,10 0 1,1 190,82 Z' },
+  { id: 'back_of_head', label: 'Back of Head', path: 'M100,125 Q150,190 200,125 L190,165 Q150,185 110,165 Z' },
+  { id: 'neck', label: 'Neck', path: 'M130,170 L170,170 L165,195 L135,195 Z' },
 ];
 
 
@@ -48,7 +49,6 @@ export function HeadDiagram({ selectedAreas: initialSelectedAreas, onChange }: H
           <path
             key={`${area.id}-${area.label}`} // Ensure unique key if ids can repeat (e.g. temples)
             d={area.path}
-            transform={area.transform}
             fill={selected.includes(area.id) ? 'hsl(var(--accent))' : 'hsl(var(--secondary))'}
             stroke="hsl(var(--border))"
             strokeWidth="1"
@@ -64,3 +64,4 @@ export function HeadDiagram({ selectedAreas: initialSelectedAreas, onChange }: H
     </div>
   );
 }
+
