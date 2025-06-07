@@ -128,8 +128,8 @@ export default function RecommendationsPage() {
           </Button>
         </CardFooter>
       </Card>
-       {numSessions < 3 && !recommendations && !isLoading && ( // Only show if not already showing recommendations or loading
-         <Alert variant="default" className="border-accent bg-accent/10 text-accent-foreground">
+       {numSessions < 3 && !recommendations && !isLoading && ( 
+         <Alert variant="default" className="border-accent bg-accent/10 text-accent">
             <AlertCircle className="h-4 w-4 text-accent" />
             <AlertTitle>More Data Needed</AlertTitle>
             <AlertDescription>

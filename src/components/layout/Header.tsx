@@ -23,7 +23,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
-        <Logo className="ml-4 md:ml-6" /> {/* Increased left margin */}
+        <Logo className="ml-6 md:ml-8" /> {/* Increased left margin */}
         <div className="hidden md:flex items-center space-x-4">
           <NavLinks />
         </div>
@@ -34,18 +34,18 @@ export function Header() {
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             aria-label="Toggle theme"
           >
-            {theme === 'dark' ? <Sun className="h-5 w-5 text-primary" /> : <Moon className="h-5 w-5 text-primary" />}
+            {theme === 'dark' ? <Sun className="h-5 w-5 text-accent" /> : <Moon className="h-5 w-5 text-accent" />}
           </Button>
           <Link href="/settings" passHref>
             <Button variant="ghost" size="icon" aria-label="Settings">
-              <Settings className="h-5 w-5 text-primary" />
+              <Settings className="h-5 w-5 text-accent" />
             </Button>
           </Link>
           <div className="md:hidden">
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" aria-label="Open menu">
-                  <Menu className="h-6 w-6 text-primary" />
+                  <Menu className="h-6 w-6 text-accent" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[280px] p-6">
