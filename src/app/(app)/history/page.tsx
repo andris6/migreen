@@ -21,6 +21,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import {
   ChartContainer,
@@ -31,6 +40,7 @@ import {
 } from "@/components/ui/chart"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
 import type { ChartConfig } from "@/components/ui/chart";
+import { availableTriggers } from '@/types';
 
 const chartConfig = {
   painIntensity: { label: "Pain Intensity", color: "hsl(var(--chart-1))" },
@@ -43,6 +53,14 @@ function formatHeadArea(area?: HeadArea): string {
   return area.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
+const getTriggerNames = (triggerIds: string[]): string => {
+  if (!triggerIds || triggerIds.length === 0) return 'N/A';
+  return triggerIds.map(id => {
+    const trigger = availableTriggers.find(t => t.id === id);
+    return trigger ? trigger.name : id; // Fallback to ID if name not found
+  }).join(', ');
+};
+
 export default function HistoryPage() {
   const [sessions, setSessions] = useState<TherapySession[]>([]);
   const [filteredSessions, setFilteredSessions] = useState<TherapySession[]>([]);
@@ -51,6 +69,8 @@ export default function HistoryPage() {
   const [reliefFilter, setReliefFilter] = useState<string>("all");
   const [sessionToDelete, setSessionToDelete] = useState<string | null>(null);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [selectedSession, setSelectedSession] = useState<TherapySession | null>(null);
+  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -89,7 +109,7 @@ export default function HistoryPage() {
       });
     }
 
-    setFilteredSessions(tempSessions);
+    setFilteredSessions(tempSessions.sort((a, b) => parseISO(b.startTime).getTime() - parseISO(a.startTime).getTime()));
   }, [sessions, dateFilter, painFilter, reliefFilter]);
 
   const chartData = useMemo(() => {
@@ -108,8 +128,8 @@ export default function HistoryPage() {
       s.id,
       format(parseISO(s.startTime), 'yyyy-MM-dd HH:mm'),
       s.painIntensity,
-      s.affectedArea ? formatHeadArea(s.affectedArea) : '', // Updated
-      s.triggers.join(', '),
+      s.affectedArea ? formatHeadArea(s.affectedArea) : '',
+      getTriggerNames(s.triggers),
       s.preSessionNotes || '',
       s.recommendedDuration,
       s.actualDuration,
@@ -144,6 +164,11 @@ export default function HistoryPage() {
       toast({ title: "Session Deleted", description: "The session has been removed from your history." });
     }
     setIsAlertOpen(false);
+  };
+
+  const handleViewDetails = (session: TherapySession) => {
+    setSelectedSession(session);
+    setIsDetailsDialogOpen(true);
   };
 
   return (
@@ -248,7 +273,7 @@ export default function HistoryPage() {
                     <TableCell>{session.reliefScore}</TableCell>
                     <TableCell>{session.medicationTaken ? 'Yes' : 'No'}</TableCell>
                     <TableCell>
-                      <Button variant="link" size="sm" onClick={() => alert(JSON.stringify(session, null, 2))}>View</Button>
+                      <Button variant="link" size="sm" onClick={() => handleViewDetails(session)}>View</Button>
                     </TableCell>
                     <TableCell>
                       <Button variant="ghost" size="icon" onClick={() => handleDeleteInitiation(session.id)}>
@@ -280,6 +305,72 @@ export default function HistoryPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {selectedSession && (
+        <Dialog open={isDetailsDialogOpen} onOpenChange={setIsDetailsDialogOpen}>
+          <DialogContent className="sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Session Details</DialogTitle>
+              <DialogDescription>
+                Session from {format(parseISO(selectedSession.startTime), 'MMMM d, yyyy \'at\' HH:mm')}.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-3 py-4 text-sm max-h-[60vh] overflow-y-auto pr-2">
+              <div className="grid grid-cols-[160px_1fr] items-center gap-x-4 gap-y-1">
+                <span className="font-medium text-muted-foreground">Pain Intensity (Pre):</span>
+                <span>{selectedSession.painIntensity}/10</span>
+
+                <span className="font-medium text-muted-foreground">Affected Area:</span>
+                <span>{formatHeadArea(selectedSession.affectedArea)}</span>
+
+                <span className="font-medium text-muted-foreground">Triggers:</span>
+                <span>{getTriggerNames(selectedSession.triggers)}</span>
+                
+                <span className="font-medium text-muted-foreground">Rec. Duration:</span>
+                <span>{selectedSession.recommendedDuration} min</span>
+
+                <span className="font-medium text-muted-foreground">Actual Duration:</span>
+                <span>{selectedSession.actualDuration} min</span>
+                
+                <span className="font-medium text-muted-foreground">End Time:</span>
+                <span>{selectedSession.endTime ? format(parseISO(selectedSession.endTime), 'MMM d, yyyy HH:mm') : 'N/A'}</span>
+
+                <span className="font-medium text-muted-foreground">Relief Score (Post):</span>
+                <span>{selectedSession.reliefScore}/10</span>
+
+                <span className="font-medium text-muted-foreground">Medication Taken:</span>
+                <span>{selectedSession.medicationTaken ? 'Yes' : 'No'}</span>
+              </div>
+
+              {selectedSession.preSessionNotes && (
+                <div className="mt-2">
+                  <span className="font-medium text-muted-foreground">Pre-Session Notes:</span>
+                  <p className="mt-1 whitespace-pre-wrap p-2 bg-muted/50 rounded-md">{selectedSession.preSessionNotes}</p>
+                </div>
+              )}
+              {selectedSession.postSessionNotes && (
+                <div className="mt-2">
+                  <span className="font-medium text-muted-foreground">Post-Session Notes:</span>
+                  <p className="mt-1 whitespace-pre-wrap p-2 bg-muted/50 rounded-md">{selectedSession.postSessionNotes}</p>
+                </div>
+              )}
+              <div className="mt-3 pt-3 border-t border-border">
+                <span className="font-medium text-muted-foreground">Session ID:</span>
+                <span className="block text-xs text-muted-foreground/80 truncate mt-1">{selectedSession.id}</span>
+              </div>
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="outline">
+                  Close
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
+
+    
