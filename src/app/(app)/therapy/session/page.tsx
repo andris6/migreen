@@ -4,7 +4,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import type { PreSessionData } from '@/types';
-import { LongPressButton } from '@/components/therapy/LongPressButton';
+import { Button } from '@/components/ui/button'; // Changed from LongPressButton
 import { AlertTriangle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -124,13 +124,13 @@ export default function TherapySessionPage() {
       </h1>
       
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-48">
-        <LongPressButton
-          onLongPress={handleExit}
-          className="bg-white/25 hover:bg-white/40 text-white border border-white/40 py-4 text-lg shadow-xl"
-          aria-label="Long press to exit session"
+        <Button
+          onClick={handleExit} // Changed from onLongPress
+          className="bg-white/25 hover:bg-white/40 text-white border border-white/40 py-4 text-lg shadow-xl w-full" // Added w-full for consistency
+          aria-label="Exit session"
         >
           Exit Session
-        </LongPressButton>
+        </Button>
       </div>
 
       <Card className="absolute top-4 right-4 bg-white/25 backdrop-blur-md border-white/40 text-white max-w-sm shadow-lg">
