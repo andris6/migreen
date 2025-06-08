@@ -126,8 +126,7 @@ export default function TherapySessionPage() {
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-48">
         <LongPressButton
           onLongPress={handleExit}
-          variant="destructive"
-          className="bg-red-600 hover:bg-red-700 text-white py-4 text-lg shadow-xl"
+          className="bg-white/25 hover:bg-white/40 text-white border border-white/40 py-4 text-lg shadow-xl"
           aria-label="Long press to exit session"
         >
           Exit Session
