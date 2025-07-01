@@ -40,8 +40,8 @@ export function Header({ className: propClassName }: HeaderProps) {
         aria-label="Toggle theme"
         className="group"
       >
-        <Sun className="h-5 w-5 text-accent rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-        <Moon className="absolute h-5 w-5 text-accent rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+        <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+        <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
         <span className="sr-only">Toggle theme</span>
       </Button>
   )
@@ -76,11 +76,11 @@ export function Header({ className: propClassName }: HeaderProps) {
             <>
               <Link href="/settings" passHref>
                 <Button variant="ghost" size="icon" aria-label="Settings" className="group">
-                  <Settings className="h-5 w-5 text-accent" />
+                  <Settings className="h-5 w-5" />
                 </Button>
               </Link>
               <Button variant="ghost" size="icon" onClick={logOut} aria-label="Log Out">
-                <LogOut className="h-5 w-5 text-accent" />
+                <LogOut className="h-5 w-5" />
               </Button>
             </>
           ) : (
@@ -94,7 +94,7 @@ export function Header({ className: propClassName }: HeaderProps) {
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" aria-label="Open menu" className="group">
-                  <Menu className="h-6 w-6 text-accent" />
+                  <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[280px] p-6">
