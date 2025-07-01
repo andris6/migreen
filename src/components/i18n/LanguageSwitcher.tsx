@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/select';
 import { Globe } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
 
 // A simple cookie handler
 const setCookie = (name: string, value: string, days: number) => {
@@ -22,6 +23,9 @@ const setCookie = (name: string, value: string, days: number) => {
 };
 
 const getCookie = (name: string) => {
+  if (typeof document === 'undefined') {
+    return null;
+  }
   const nameEQ = name + '=';
   const ca = document.cookie.split(';');
   for (let i = 0; i < ca.length; i++) {
@@ -34,7 +38,13 @@ const getCookie = (name: string) => {
 
 export function LanguageSwitcher() {
   const t = useTranslations('LanguageSwitcher');
-  const currentLocale = getCookie('NEXT_LOCALE') || 'en';
+  const [currentLocale, setCurrentLocale] = useState('en');
+
+  useEffect(() => {
+    const localeFromCookie = getCookie('NEXT_LOCALE') || 'en';
+    setCurrentLocale(localeFromCookie);
+  }, []);
+
 
   const onSelectChange = (value: string) => {
     setCookie('NEXT_LOCALE', value, 365);
@@ -42,9 +52,9 @@ export function LanguageSwitcher() {
   };
 
   return (
-    <Select onValueChange={onSelectChange} defaultValue={currentLocale}>
-      <SelectTrigger className="w-auto gap-2 border-none bg-transparent shadow-none focus:ring-0 focus:ring-offset-0 [&>span]:w-auto [&>span]:text-left">
-        <Globe className="h-5 w-5 text-accent group-hover:text-accent-foreground" />
+    <Select onValueChange={onSelectChange} value={currentLocale}>
+      <SelectTrigger className="w-auto gap-2 border-0 bg-transparent text-foreground/80 shadow-none ring-offset-0 focus:ring-0 focus:ring-offset-0">
+        <Globe className="h-5 w-5" />
         <SelectValue placeholder={t('placeholder')} />
       </SelectTrigger>
       <SelectContent>

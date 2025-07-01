@@ -1,4 +1,4 @@
-'use client'; // Required for Header which uses useTheme and usePathname
+'use client';
 
 import { Header } from '@/components/layout/Header';
 import { usePathname } from 'next/navigation';
@@ -15,17 +15,20 @@ export default function AppLayout({
   const isTherapySessionPage = pathname === '/therapy/session';
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <Header 
         className={cn(
-          'transition-all duration-500 ease-in-out',
+          'transition-all duration-300 ease-in-out',
           isTherapySessionPage ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'
         )}
       />
-      <main className="flex-grow container mx-auto px-4 py-8 max-w-screen-2xl">
+      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {children}
       </main>
-      <footer className="py-6 text-center text-sm text-muted-foreground border-t">
+      <footer className={cn(
+        "py-4 text-center text-xs text-muted-foreground border-t transition-opacity duration-300",
+        isTherapySessionPage ? 'opacity-0' : 'opacity-100'
+      )}>
         {t('copyright', { year: new Date().getFullYear() })}
       </footer>
     </div>

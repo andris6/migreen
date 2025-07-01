@@ -1,14 +1,12 @@
-
-import {notFound} from 'next/navigation';
 import {getRequestConfig} from 'next-intl/server';
  
-const locales = ['en', 'hu', 'de', 'fr', 'es', 'pt', 'zh', 'ja'];
- 
-export default getRequestConfig(async ({locale}) => {
-  // Validate that the incoming `locale` parameter is valid
-  if (!locales.includes(locale as any)) notFound();
+// This function is temporarily simplified to use a static locale.
+// This helps to isolate and resolve a persistent build-time configuration issue.
+export default getRequestConfig(async () => {
+  const locale = 'en';
  
   return {
+    locale,
     messages: (await import(`./messages/${locale}.json`)).default
   };
 });

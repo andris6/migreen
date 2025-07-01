@@ -1,2 +1,5 @@
-// This file is intentionally left blank to avoid conflicts.
-// The primary configuration for next-intl is located in `src/i18n.ts`.
+// This file is a proxy to the dynamic config in `src/i18n.ts`.
+// See https://next-intl.dev/docs/getting-started/app-router#using-a-src-directory
+import i18n from './src/i18n';
+
+export default i18n;

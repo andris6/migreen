@@ -7,7 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { format, parseISO } from 'date-fns';
 import { Button, buttonVariants } from '@/components/ui/button';
-import { Download, Filter, Trash2 } from 'lucide-react';
+import { Download, Filter, Trash2, SlidersHorizontal } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
@@ -103,6 +104,7 @@ export default function HistoryPage() {
     
     if (reliefFilter !== "all") {
       tempSessions = tempSessions.filter(s => {
+        if (!s.reliefScore) return false;
         if (reliefFilter === "low") return s.reliefScore <= 3;
         if (reliefFilter === "medium") return s.reliefScore >= 4 && s.reliefScore <= 7;
         if (reliefFilter === "high") return s.reliefScore >= 8;
@@ -135,7 +137,7 @@ export default function HistoryPage() {
       s.recommendedDuration,
       s.actualDuration,
       s.endTime ? format(parseISO(s.endTime), 'yyyy-MM-dd HH:mm') : 'N/A',
-      s.reliefScore,
+      s.reliefScore ?? 'N/A',
       s.medicationTaken ? 'Yes' : 'No',
       s.postSessionNotes || ''
     ].map(String).map(v => v.replace(/"/g, '""'))
@@ -174,110 +176,117 @@ export default function HistoryPage() {
 
   return (
     <div className="space-y-8">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold font-headline">{t('title')}</h1>
+          <p className="text-muted-foreground">{t('description')}</p>
+        </div>
+        <div className="flex items-center gap-2">
+           <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">
+                <SlidersHorizontal className="mr-2 h-4 w-4" /> Filters
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-64 space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="dateFilter">{t('dateFilterLabel')}</Label>
+                  <Select value={dateFilter} onValueChange={setDateFilter}>
+                    <SelectTrigger id="dateFilter"><SelectValue placeholder={t('dateFilterPlaceholder')} /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t('dateFilterAll')}</SelectItem>
+                      <SelectItem value="last7">{t('dateFilter7')}</SelectItem>
+                      <SelectItem value="last30">{t('dateFilter30')}</SelectItem>
+                      <SelectItem value="last90">{t('dateFilter90')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="painFilter">{t('painFilterLabel')}</Label>
+                  <Select value={painFilter} onValueChange={setPainFilter}>
+                    <SelectTrigger id="painFilter"><SelectValue placeholder={t('painFilterPlaceholder')} /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t('painFilterAll')}</SelectItem>
+                      <SelectItem value="low">{t('painFilterLow')}</SelectItem>
+                      <SelectItem value="medium">{t('painFilterMedium')}</SelectItem>
+                      <SelectItem value="high">{t('painFilterHigh')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="reliefFilter">{t('reliefFilterLabel')}</Label>
+                  <Select value={reliefFilter} onValueChange={setReliefFilter}>
+                    <SelectTrigger id="reliefFilter"><SelectValue placeholder={t('reliefFilterPlaceholder')} /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t('reliefFilterAll')}</SelectItem>
+                      <SelectItem value="low">{t('reliefFilterLow')}</SelectItem>
+                      <SelectItem value="medium">{t('reliefFilterMedium')}</SelectItem>
+                      <SelectItem value="high">{t('reliefFilterHigh')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+            </PopoverContent>
+          </Popover>
+          <Button onClick={exportToCSV} variant="outline" disabled={filteredSessions.length === 0}>
+            <Download className="mr-2 h-4 w-4" /> {t('exportButton')}
+          </Button>
+        </div>
+      </div>
+      
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline">{t('title')}</CardTitle>
-          <CardDescription>{t('description')}</CardDescription>
+          <CardTitle>{t('trendsTitle')}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-wrap gap-4 mb-6 p-4 border rounded-lg bg-muted/50">
-            <div className="flex-1 min-w-[150px]">
-              <Label htmlFor="dateFilter">{t('dateFilterLabel')}</Label>
-              <Select value={dateFilter} onValueChange={setDateFilter}>
-                <SelectTrigger id="dateFilter"><SelectValue placeholder={t('dateFilterPlaceholder')} /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('dateFilterAll')}</SelectItem>
-                  <SelectItem value="last7">{t('dateFilter7')}</SelectItem>
-                  <SelectItem value="last30">{t('dateFilter30')}</SelectItem>
-                  <SelectItem value="last90">{t('dateFilter90')}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex-1 min-w-[150px]">
-              <Label htmlFor="painFilter">{t('painFilterLabel')}</Label>
-              <Select value={painFilter} onValueChange={setPainFilter}>
-                <SelectTrigger id="painFilter"><SelectValue placeholder={t('painFilterPlaceholder')} /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('painFilterAll')}</SelectItem>
-                  <SelectItem value="low">{t('painFilterLow')}</SelectItem>
-                  <SelectItem value="medium">{t('painFilterMedium')}</SelectItem>
-                  <SelectItem value="high">{t('painFilterHigh')}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex-1 min-w-[150px]">
-              <Label htmlFor="reliefFilter">{t('reliefFilterLabel')}</Label>
-              <Select value={reliefFilter} onValueChange={setReliefFilter}>
-                <SelectTrigger id="reliefFilter"><SelectValue placeholder={t('reliefFilterPlaceholder')} /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('reliefFilterAll')}</SelectItem>
-                  <SelectItem value="low">{t('reliefFilterLow')}</SelectItem>
-                  <SelectItem value="medium">{t('reliefFilterMedium')}</SelectItem>
-                  <SelectItem value="high">{t('reliefFilterHigh')}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {filteredSessions.length > 0 && (
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle>{t('trendsTitle')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={chartData} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false}/>
-                      <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} />
-                      <YAxis yAxisId="left" orientation="left" stroke="hsl(var(--chart-1))" domain={[0,10]}/>
-                      <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--chart-3))" domain={[0,90]}/>
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <ChartLegend content={<ChartLegendContent />} />
-                      <Bar yAxisId="left" dataKey="painIntensity" fill="var(--color-painIntensity)" radius={4} />
-                      <Bar yAxisId="left" dataKey="reliefScore" fill="var(--color-reliefScore)" radius={4} />
-                      <Bar yAxisId="right" dataKey="actualDuration" fill="var(--color-actualDuration)" radius={4} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
-              </CardContent>
-            </Card>
+          {filteredSessions.length > 0 ? (
+            <ChartContainer config={chartConfig} className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false}/>
+                  <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} />
+                  <YAxis yAxisId="left" orientation="left" stroke="hsl(var(--chart-1))" domain={[0,10]}/>
+                  <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--chart-3))" domain={[0,90]}/>
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <ChartLegend content={<ChartLegendContent />} />
+                  <Bar yAxisId="left" dataKey="painIntensity" fill="var(--color-painIntensity)" radius={4} />
+                  <Bar yAxisId="left" dataKey="reliefScore" fill="var(--color-reliefScore)" radius={4} />
+                  <Bar yAxisId="right" dataKey="actualDuration" fill="var(--color-actualDuration)" radius={4} />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          ) : (
+            <p className="text-center text-muted-foreground py-8">{t('noSessionsMessage')}</p>
           )}
-
-          <div className="flex justify-end mb-4">
-            <Button onClick={exportToCSV} variant="outline" disabled={filteredSessions.length === 0}>
-              <Download className="mr-2 h-4 w-4" /> {t('exportButton')}
-            </Button>
-          </div>
-
+        </CardContent>
+      </Card>
+      
+      <Card>
+          <CardContent className="p-0">
           {filteredSessions.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>{t('tableHeadDate')}</TableHead>
-                  <TableHead>{t('tableHeadPain')}</TableHead>
+                  <TableHead className="text-center">{t('tableHeadPain')}</TableHead>
                   <TableHead>{t('tableHeadArea')}</TableHead>
-                  <TableHead>{t('tableHeadDuration')}</TableHead>
-                  <TableHead>{t('tableHeadRelief')}</TableHead>
-                  <TableHead>{t('tableHeadMeds')}</TableHead>
-                  <TableHead>{t('tableHeadDetails')}</TableHead>
-                  <TableHead>{t('tableHeadActions')}</TableHead>
+                  <TableHead className="text-center">{t('tableHeadDuration')}</TableHead>
+                  <TableHead className="text-center">{t('tableHeadRelief')}</TableHead>
+                  <TableHead className="text-center">{t('tableHeadMeds')}</TableHead>
+                  <TableHead className="text-right">{t('tableHeadActions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredSessions.map((session) => (
                   <TableRow key={session.id}>
-                    <TableCell>{format(parseISO(session.startTime), 'MMM d, yyyy HH:mm')}</TableCell>
-                    <TableCell>{session.painIntensity}</TableCell>
+                    <TableCell className="font-medium">{format(parseISO(session.startTime), 'MMM d, yyyy HH:mm')}</TableCell>
+                    <TableCell className="text-center">{session.painIntensity}</TableCell>
                     <TableCell>{formatHeadArea(session.affectedArea)}</TableCell>
-                    <TableCell>{session.actualDuration} {t('unitMin')}</TableCell>
-                    <TableCell>{session.reliefScore}</TableCell>
-                    <TableCell>{session.medicationTaken ? t('yes') : t('no')}</TableCell>
-                    <TableCell>
-                      <Button variant="link" size="sm" onClick={() => handleViewDetails(session)}>{t('detailsButton')}</Button>
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="ghost" size="icon" onClick={() => handleDeleteInitiation(session.id)}>
+                    <TableCell className="text-center">{session.actualDuration} {t('unitMin')}</TableCell>
+                    <TableCell className="text-center">{session.reliefScore ?? 'N/A'}</TableCell>
+                    <TableCell className="text-center">{session.medicationTaken ? t('yes') : t('no')}</TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" size="sm" onClick={() => handleViewDetails(session)}>{t('detailsButton')}</Button>
+                       <Button variant="ghost" size="icon" onClick={() => handleDeleteInitiation(session.id)}>
                         <Trash2 className="h-4 w-4 text-destructive" />
                         <span className="sr-only">{t('deleteButtonSr')}</span>
                       </Button>
@@ -287,9 +296,11 @@ export default function HistoryPage() {
               </TableBody>
             </Table>
           ) : (
-            <p className="text-center text-muted-foreground py-8">{t('noSessionsMessage')}</p>
+             <div className="text-center p-16 text-muted-foreground">
+              {t('noSessionsMessage')}
+            </div>
           )}
-        </CardContent>
+          </CardContent>
       </Card>
 
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
@@ -337,7 +348,7 @@ export default function HistoryPage() {
                 <span>{selectedSession.endTime ? format(parseISO(selectedSession.endTime), 'MMM d, yyyy HH:mm') : t('na')}</span>
 
                 <span className="font-medium text-muted-foreground">{t('detailsRelief')}</span>
-                <span>{selectedSession.reliefScore}/10</span>
+                <span>{selectedSession.reliefScore ?? 'N/A'}/10</span>
 
                 <span className="font-medium text-muted-foreground">{t('detailsMeds')}</span>
                 <span>{selectedSession.medicationTaken ? t('yes') : t('no')}</span>

@@ -1,4 +1,3 @@
-
 export type HeadArea = "forehead" | "temples" | "eyes" | "back_of_head" | "top_of_head" | "neck" | "none";
 
 export const availableHeadAreas: { id: HeadArea; name: string }[] = [
@@ -27,10 +26,10 @@ export const availableTriggers: Trigger[] = [
 
 export interface PreSessionData {
   painIntensity: number;
-  affectedArea?: HeadArea; // Changed from affectedAreas: HeadArea[]
-  triggers: string[]; // array of trigger ids
+  affectedArea?: HeadArea;
+  triggers: string[];
   preSessionNotes?: string;
-  recommendedDuration: number; // in minutes
+  recommendedDuration: number;
 }
 
 export interface PostSessionData {
@@ -47,8 +46,8 @@ export interface TherapySession extends PreSessionData, PostSessionData {
 }
 
 export interface Settings {
-  defaultSessionLength: number; // minutes
-  notificationTime: string; // e.g., "15min_before" (conceptual)
+  defaultSessionLength: number;
+  notificationTime: string;
   vibrationFeedback: boolean;
   darkMode: boolean;
 }

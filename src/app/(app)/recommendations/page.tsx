@@ -3,49 +3,25 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Loader2, Wand2, AlertCircle } from 'lucide-react';
+import { Loader2, Wand2, AlertCircle, Clock, Calendar, ListChecks } from 'lucide-react';
 import { personalizedTherapyRecommendation, type PersonalizedTherapyRecommendationOutput } from '@/ai/flows/personalized-therapy-recommendation';
-import { getStoredSessions, type TherapySession, type HeadArea } from '@/lib/storage';
+import { getStoredSessions, type TherapySession } from '@/lib/storage';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useTranslations } from 'next-intl';
 
-function formatHeadAreaForAI(area?: HeadArea): string {
-  if (!area || area === 'none') return 'N/A';
-  return area.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-}
-
-function formatSessionHistoryForAI(sessions: TherapySession[]): string {
-  if (sessions.length === 0) {
-    return "No session history available.";
-  }
-  return sessions.map(s => 
-    `Session on ${new Date(s.startTime).toLocaleDateString()}:
-    - Pain (Pre): ${s.painIntensity}/10
-    - Affected Area: ${formatHeadAreaForAI(s.affectedArea)}
-    - Triggers: ${s.triggers.join(', ') || 'N/A'}
-    - Duration: ${s.actualDuration} mins
-    - Relief (Post): ${s.reliefScore}/10
-    - Medication Taken: ${s.medicationTaken ? 'Yes' : 'No'}
-    - Notes (Pre-Session): ${s.preSessionNotes || 'N/A'}
-    - Notes (Post-Session): ${s.postSessionNotes || 'N/A'}
-    `).join('\n\n');
-}
-
-
 export default function RecommendationsPage() {
   const t = useTranslations('RecommendationsPage');
-  const [sessionHistory, setSessionHistory] = useState<string>('');
+  const [sessionHistory, setSessionHistory] = useState<TherapySession[]>([]);
   const [recommendations, setRecommendations] = useState<PersonalizedTherapyRecommendationOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [numSessions, setNumSessions] = useState(0);
+  
+  const numSessions = sessionHistory.length;
 
   useEffect(() => {
     const sessions = getStoredSessions();
-    setNumSessions(sessions.length);
-    const formattedHistory = formatSessionHistoryForAI(sessions);
-    setSessionHistory(formattedHistory);
+    setSessionHistory(sessions);
   }, []);
 
   const handleGetRecommendations = async () => {
@@ -60,7 +36,8 @@ export default function RecommendationsPage() {
     }
 
     try {
-      const result = await personalizedTherapyRecommendation({ sessionHistory });
+      const historyString = JSON.stringify(sessionHistory, null, 2);
+      const result = await personalizedTherapyRecommendation({ sessionHistory: historyString });
       setRecommendations(result);
     } catch (e) {
       console.error("AI Recommendation Error:", e);
@@ -74,14 +51,19 @@ export default function RecommendationsPage() {
     <div className="max-w-3xl mx-auto space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline flex items-center gap-2"><Wand2 className="h-6 w-6 text-primary" /> {t('title')}</CardTitle>
+          <CardTitle className="font-headline flex items-center gap-2 text-3xl"><Wand2 className="h-8 w-8 text-primary" /> {t('title')}</CardTitle>
           <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
             <h3 className="font-semibold mb-2">{t('historySummaryTitle')}</h3>
             <ScrollArea className="h-48 w-full rounded-md border p-3 bg-muted/50">
-              <pre className="text-xs whitespace-pre-wrap">{sessionHistory || t('loadingHistory')}</pre>
+              <pre className="text-xs whitespace-pre-wrap">{sessionHistory.length > 0 ? JSON.stringify(sessionHistory.map(s => ({
+                  date: s.startTime,
+                  pain: s.painIntensity,
+                  relief: s.reliefScore,
+                  duration: s.actualDuration
+              })), null, 2) : t('loadingHistory')}</pre>
             </ScrollArea>
             <p className="text-xs text-muted-foreground mt-1">{t('sessionsRecorded', { count: numSessions })}</p>
           </div>
@@ -95,22 +77,31 @@ export default function RecommendationsPage() {
           )}
 
           {recommendations && (
-            <Card className="bg-primary/10 border-primary">
+            <Card className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
               <CardHeader>
                 <CardTitle className="text-primary">{t('recommendationsTitle')}</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3 text-sm">
-                <div>
-                  <h4 className="font-semibold">{t('recDuration')}</h4>
-                  <p>{recommendations.recommendedDuration}</p>
+              <CardContent className="space-y-4">
+                <div className="flex items-start gap-4">
+                    <div className="p-2 bg-primary/10 rounded-full"><Clock className="h-5 w-5 text-primary"/></div>
+                    <div>
+                        <h4 className="font-semibold">{t('recDuration')}</h4>
+                        <p className="text-muted-foreground">{recommendations.recommendedDuration}</p>
+                    </div>
                 </div>
-                <div>
-                  <h4 className="font-semibold">{t('recTime')}</h4>
-                  <p>{recommendations.recommendedTimeOfDay}</p>
+                 <div className="flex items-start gap-4">
+                    <div className="p-2 bg-primary/10 rounded-full"><Calendar className="h-5 w-5 text-primary"/></div>
+                    <div>
+                        <h4 className="font-semibold">{t('recTime')}</h4>
+                        <p className="text-muted-foreground">{recommendations.recommendedTimeOfDay}</p>
+                    </div>
                 </div>
-                <div>
-                  <h4 className="font-semibold">{t('recAdjustments')}</h4>
-                  <p className="whitespace-pre-wrap">{recommendations.otherAdjustments}</p>
+                 <div className="flex items-start gap-4">
+                    <div className="p-2 bg-primary/10 rounded-full"><ListChecks className="h-5 w-5 text-primary"/></div>
+                    <div>
+                        <h4 className="font-semibold">{t('recAdjustments')}</h4>
+                        <p className="text-muted-foreground whitespace-pre-wrap">{recommendations.otherAdjustments}</p>
+                    </div>
                 </div>
               </CardContent>
               <CardFooter>
@@ -118,26 +109,28 @@ export default function RecommendationsPage() {
               </CardFooter>
             </Card>
           )}
+
+          {numSessions < 3 && !recommendations && !isLoading && ( 
+            <Alert variant="default" className="border-accent bg-accent/10 text-accent-foreground">
+              <AlertCircle className="h-4 w-4 text-accent-foreground" />
+              <AlertTitle>{t('moreDataNeededTitle')}</AlertTitle>
+              <AlertDescription>
+                {t('moreDataNeededDescription')}
+              </AlertDescription>
+            </Alert>
+          )}
+
         </CardContent>
         <CardFooter>
-          <Button onClick={handleGetRecommendations} disabled={isLoading || numSessions < 3} className="w-full">
+          <Button onClick={handleGetRecommendations} disabled={isLoading || numSessions < 3} className="w-full text-lg py-6" size="lg">
             {isLoading ? (
-              <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('generatingButton')}</>
+              <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> {t('generatingButton')}</>
             ) : (
               t('generateButton')
             )}
           </Button>
         </CardFooter>
       </Card>
-       {numSessions < 3 && !recommendations && !isLoading && ( 
-         <Alert variant="default" className="border-accent bg-accent/10 text-accent">
-            <AlertCircle className="h-4 w-4 text-accent" />
-            <AlertTitle>{t('moreDataNeededTitle')}</AlertTitle>
-            <AlertDescription>
-              {t('moreDataNeededDescription')}
-            </AlertDescription>
-          </Alert>
-      )}
     </div>
   );
 }

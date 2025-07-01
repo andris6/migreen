@@ -13,7 +13,7 @@ import type { Settings as AppSettings } from '@/types';
 import { getStoredSettings, storeSettings } from '@/lib/storage';
 import { useToast } from '@/hooks/use-toast';
 import { useTheme } from 'next-themes';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, Bell, Vibrate } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 const settingsSchema = z.object({
@@ -43,7 +43,7 @@ export default function SettingsPage() {
         defaultSessionLength: loadedSettings.defaultSessionLength,
       });
     }
-  }, [form, setTheme]);
+  }, [form]);
 
 
   const onSubmit = (data: SettingsFormValues) => {
@@ -63,15 +63,15 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-headline">{t('title')}</CardTitle>
-          <CardDescription>{t('description')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+       <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Card>
+          <CardHeader>
+            <CardTitle className="font-headline text-3xl">{t('title')}</CardTitle>
+            <CardDescription>{t('description')}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-8">
             <div className="space-y-2">
-              <Label htmlFor="defaultSessionLength" className="text-lg">{t('sessionLengthLabel')}</Label>
+              <Label htmlFor="defaultSessionLength">{t('sessionLengthLabel')}</Label>
               <Controller
                 name="defaultSessionLength"
                 control={form.control}
@@ -93,35 +93,37 @@ export default function SettingsPage() {
               )}
             </div>
 
-            <div className="flex items-center justify-between space-y-2">
-              <Label htmlFor="darkModeToggle" className="text-lg">{t('darkModeLabel')}</Label>
+            <div className="flex items-center justify-between p-4 border rounded-lg">
+                <Label htmlFor="darkModeToggle" className="flex items-center gap-2 font-medium">
+                    {theme === 'dark' ? <Moon/> : <Sun/>}
+                    {t('darkModeLabel')}
+                </Label>
               <Switch
                 id="darkModeToggle"
                 checked={theme === 'dark'}
                 onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
                 aria-label={t('darkModeSr')}
-              >
-                {theme === 'dark' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-              </Switch>
+              />
             </div>
             
-            <div className="space-y-2 opacity-50">
-              <Label className="text-lg">{t('notificationLabel')}</Label>
+            <div className="space-y-2 opacity-50 cursor-not-allowed">
+              <Label className="flex items-center gap-2"><Bell/>{t('notificationLabel')}</Label>
               <Input value={t('notificationPlaceholder')} disabled />
               <p className="text-xs text-muted-foreground">{t('notificationDescription')}</p>
             </div>
 
-            <div className="flex items-center justify-between space-y-2 opacity-50">
-              <Label className="text-lg">{t('vibrationLabel')}</Label>
+            <div className="flex items-center justify-between p-4 border rounded-lg opacity-50 cursor-not-allowed">
+              <Label className="flex items-center gap-2"><Vibrate/>{t('vibrationLabel')}</Label>
               <Switch checked={true} disabled />
             </div>
-
-            <Button type="submit" className="w-full text-lg py-3">
+          </CardContent>
+          <CardFooter>
+             <Button type="submit" size="lg" className="w-full text-lg py-6">
               {t('saveButton')}
             </Button>
-          </form>
-        </CardContent>
-      </Card>
+          </CardFooter>
+        </Card>
+      </form>
     </div>
   );
 }
