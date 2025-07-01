@@ -106,8 +106,8 @@ export default function RecommendationsPage() {
           )}
 
           {numSessions < 3 && !recommendations && !isLoading && ( 
-            <Alert variant="default" className="border-accent bg-accent/10 text-accent-foreground">
-              <AlertCircle className="h-4 w-4 text-accent-foreground" />
+            <Alert variant="default" className="border-accent text-accent">
+              <AlertCircle className="h-4 w-4 text-accent" />
               <AlertTitle>More Data Needed</AlertTitle>
               <AlertDescription>
                 The AI needs at least 3 completed therapy sessions to provide meaningful insights. Keep logging your sessions to unlock personalized recommendations!
