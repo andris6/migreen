@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
@@ -8,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { AlertTriangle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
-const GREEN_LIGHT_COLOR = '#A7D1AB'; // Soft green from theme
+const GREEN_LIGHT_COLOR = '#40bf80';
 
 export default function TherapySessionPage() {
   const router = useRouter();
@@ -108,7 +107,7 @@ export default function TherapySessionPage() {
       aria-label="Green light therapy session active"
     >
       <h1 
-          className="absolute top-4 left-1/2 -translate-x-1/2 text-6xl md:text-8xl font-mono font-bold"
+          className="absolute top-4 left-4 text-4xl font-mono font-bold"
           style={{ color: '#FFFFFF', textShadow: '0 0 15px rgba(0,0,0,0.3)' }}
           aria-live="polite"
           aria-atomic="true"
