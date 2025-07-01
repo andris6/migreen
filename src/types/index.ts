@@ -1,3 +1,4 @@
+
 export type HeadArea = "forehead" | "temples" | "eyes" | "back_of_head" | "top_of_head" | "neck" | "none";
 
 export const availableHeadAreas: { id: HeadArea; name: string }[] = [
@@ -50,4 +51,10 @@ export interface Settings {
   notificationTime: string;
   vibrationFeedback: boolean;
   darkMode: boolean;
+}
+
+export interface User {
+  id: string;
+  email: string;
+  password?: string; // This should not exist in a real app
 }
