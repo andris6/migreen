@@ -22,7 +22,7 @@ export default function HomePage() {
         <div className="text-center lg:text-left">
           <Logo className="mb-6 text-5xl justify-center lg:justify-start" />
           <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary mb-4 animate-fade-in-down">
-            Find Clarity.<br/>Relieve Migraines.
+            Your Migraine Solution, Instantly.
           </h1>
           <p className="text-lg text-foreground/80 mb-8 max-w-xl mx-auto lg:mx-0">
             Your personalized companion for migraine relief through green light therapy. Track your sessions, gain insights, and find what works best for you.
