@@ -2,8 +2,11 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
-import { getCurrentUser as authGetCurrentUser, logOut as authLogOut, type User } from '@/lib/auth';
-import { useRouter, usePathname } from 'next/navigation';
+import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { logOut as authLogOut } from '@/lib/auth';
+import type { User } from '@/types';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   user: User | null;
@@ -17,37 +20,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const pathname = usePathname();
 
-  const checkUser = useCallback(() => {
-    const currentUser = authGetCurrentUser();
-    setUser(currentUser);
-    setLoading(false);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser: FirebaseUser | null) => {
+      if (firebaseUser) {
+        setUser({
+          id: firebaseUser.uid,
+          email: firebaseUser.email,
+        });
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    checkUser();
-  }, [pathname, checkUser]);
-
-  const logOut = () => {
-    authLogOut();
-    setUser(null);
+  const logOut = async () => {
+    await authLogOut();
     router.push('/login');
   };
-  
-  // This effect listens for storage changes from other tabs to keep auth state in sync.
-  useEffect(() => {
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === 'migreen_session' || event.key === 'migreen_users') {
-        checkUser();
-      }
-    };
-    
-    window.addEventListener('storage', handleStorageChange);
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, [checkUser]);
 
   const value = { user, logOut, loading };
 

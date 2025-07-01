@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Logo } from "@/components/layout/Logo";
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 
 export default function HomePage() {
@@ -18,13 +17,13 @@ export default function HomePage() {
       <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem] dark:bg-slate-950 dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)]">
         <div className="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#38bdf81a,transparent)]"></div>
       </div>
-      <div className="container grid grid-cols-1 lg:grid-cols-2 items-center gap-12 px-6">
-        <div className="text-center lg:text-left">
-          <Logo className="mb-6 text-5xl justify-center lg:justify-start" />
+      <div className="container grid grid-cols-1 items-center gap-12 px-6">
+        <div className="text-center">
+          <Logo className="mb-6 text-5xl justify-center" />
           <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary mb-4 animate-fade-in-down">
             Your Migraine Solution, Instantly.
           </h1>
-          <p className="text-lg text-foreground/80 mb-8 max-w-xl mx-auto lg:mx-0">
+          <p className="text-lg text-foreground/80 mb-8 max-w-xl mx-auto">
             Your personalized companion for migraine relief through green light therapy. Track your sessions, gain insights, and find what works best for you.
           </p>
           <Button 
@@ -34,16 +33,6 @@ export default function HomePage() {
           >
             Get Started <ArrowRight className="ml-2 h-5 w-5"/>
           </Button>
-        </div>
-        <div className="hidden lg:flex items-center justify-center">
-            <Image 
-                src="https://placehold.co/600x400.png"
-                alt="Abstract illustration representing calm and relief"
-                width={600}
-                height={400}
-                className="rounded-xl shadow-2xl"
-                data-ai-hint="calm abstract"
-            />
         </div>
       </div>
     </div>

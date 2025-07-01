@@ -54,7 +54,6 @@ export interface Settings {
 }
 
 export interface User {
-  id: string;
-  email: string;
-  password?: string; // This should not exist in a real app
+  id: string; // Firebase UID
+  email: string | null;
 }

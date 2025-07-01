@@ -43,16 +43,15 @@ export default function LoginPage() {
     },
   });
 
-  const onSubmit = (data: LoginFormValues) => {
+  const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     try {
-      logIn(data.email, data.password);
+      await logIn(data.email, data.password);
       toast({
         title: 'Login Successful',
         description: "Welcome back! You're now logged in.",
       });
-      // Allow a brief moment for user to see toast before redirecting
-      setTimeout(() => router.push('/dashboard'), 500);
+      router.push('/dashboard');
     } catch (error) {
       toast({
         variant: 'destructive',

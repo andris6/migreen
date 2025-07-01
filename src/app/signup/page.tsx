@@ -43,13 +43,13 @@ export default function SignUpPage() {
     },
   });
 
-  const onSubmit = (data: SignUpFormValues) => {
+  const onSubmit = async (data: SignUpFormValues) => {
     setIsLoading(true);
     try {
-      signUp(data.email, data.password);
+      await signUp(data.email, data.password);
       toast({
         title: 'Account Created',
-        description: "Welcome! You're now ready to log in.",
+        description: "Welcome! Please log in with your new credentials.",
       });
       router.push('/login');
     } catch (error) {
