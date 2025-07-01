@@ -1,14 +1,15 @@
+
 {
   "LanguageSwitcher": {
     "placeholder": "Language",
     "en": "English",
-    "hu": "Magyar (Hungarian)",
-    "de": "Deutsch (German)",
-    "fr": "Français (French)",
-    "es": "Español (Spanish)",
-    "pt": "Português (Portuguese)",
-    "zh": "中文 (Chinese)",
-    "ja": "日本語 (Japanese)"
+    "hu": "Hungarian",
+    "de": "German",
+    "fr": "French",
+    "es": "Spanish",
+    "pt": "Portuguese",
+    "zh": "Chinese",
+    "ja": "Japanese"
   },
   "NavLinks": {
     "dashboard": "Dashboard",
@@ -182,5 +183,10 @@
     "notesLabel": "Optional Pre-Session Notes",
     "notesPlaceholder": "Any additional details, e.g., specific food eaten, activities...",
     "startButton": "Start Therapy Session"
+  },
+  "GlobalError": {
+    "title": "Application Error",
+    "description": "We're sorry, something went wrong on our end. Please try again.",
+    "tryAgain": "Try Again"
   }
 }

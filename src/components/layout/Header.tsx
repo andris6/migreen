@@ -1,10 +1,11 @@
+
 'use client';
 
 import { Logo } from '@/components/layout/Logo';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { Menu, Settings, Sun, Moon } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import NavLinks from './NavLinks';

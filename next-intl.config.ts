@@ -1,3 +1,2 @@
-// This file is intentionally left blank to avoid configuration conflicts.
-// The internationalization (i18n) configuration for this project
-// is located in `src/i18n.ts`.
+// This file is no longer used.
+// The configuration for next-intl is now located in `src/i18n.ts`.
