@@ -1,2 +1,1 @@
-// This file is no longer used.
-// The configuration for next-intl is now located in `src/i18n.ts`.
+// This file is no longer used after removing i18n from the project.

@@ -1,9 +1,8 @@
 
 'use client';
 
-import { usePathname } from '@/i18n/navigation';
+import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useTranslations } from 'next-intl';
 import { Header } from './Header';
 
 export default function PageShell({
@@ -11,7 +10,6 @@ export default function PageShell({
 }: {
   children: React.ReactNode;
 }) {
-  const t = useTranslations('Footer');
   const pathname = usePathname();
   
   // Conditionally hide header and footer for the full-screen therapy session
@@ -36,7 +34,7 @@ export default function PageShell({
       
       {showHeaderFooter && (
         <footer className="py-4 text-center text-xs text-muted-foreground border-t">
-          {t('copyright', { year: new Date().getFullYear() })}
+          Migreen © {new Date().getFullYear()}
         </footer>
       )}
     </div>

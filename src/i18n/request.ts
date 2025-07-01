@@ -1,2 +1,1 @@
-// This file is no longer used.
-// Its content has been moved to `src/i18n.ts`.
+// This file is no longer used after removing i18n from the project.

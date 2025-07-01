@@ -1,2 +1,1 @@
-// This file is no longer used.
-// The middleware for next-intl is now located in the root `middleware.ts` file.
+// This file is no longer used after removing i18n from the project.

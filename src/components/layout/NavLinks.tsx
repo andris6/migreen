@@ -1,27 +1,26 @@
 
 'use client';
 
-import { Link, usePathname } from '@/i18n/navigation';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Home, ListChecks, BarChart3, Brain } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 
 interface NavItem {
   href: string;
-  labelKey: 'dashboard' | 'therapy' | 'history' | 'ai_insights';
+  label: string;
   icon: LucideIcon;
 }
 
 export default function NavLinks({ isMobile = false, onMobileLinkClick }: { isMobile?: boolean, onMobileLinkClick?: () => void }) {
   const pathname = usePathname();
-  const t = useTranslations('NavLinks');
 
   const navItems: NavItem[] = [
-    { href: '/dashboard', labelKey: 'dashboard', icon: Home },
-    { href: '/therapy/start', labelKey: 'therapy', icon: ListChecks },
-    { href: '/history', labelKey: 'history', icon: BarChart3 },
-    { href: '/recommendations', labelKey: 'ai_insights', icon: Brain },
+    { href: '/dashboard', label: 'Dashboard', icon: Home },
+    { href: '/therapy/start', label: 'Therapy', icon: ListChecks },
+    { href: '/history', label: 'History', icon: BarChart3 },
+    { href: '/recommendations', label: 'AI Insights', icon: Brain },
   ];
 
   const handleClick = () => {
@@ -51,7 +50,7 @@ export default function NavLinks({ isMobile = false, onMobileLinkClick }: { isMo
             )}
           >
             <item.icon className={cn('h-5 w-5', isMobile ? 'h-6 w-6' : '')} />
-            {t(item.labelKey)}
+            {item.label}
           </Link>
         )
       })}
