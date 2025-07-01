@@ -1,9 +1,11 @@
+
 import createMiddleware from 'next-intl/middleware';
  
-export default createMiddleware({
-  // A list of all locales that are supported
-  locales: ['en', 'hu', 'de', 'fr', 'es', 'pt', 'zh', 'ja'],
+// A list of all locales that are supported
+const locales = ['en', 'hu', 'de', 'fr', 'es', 'pt', 'zh', 'ja'];
  
+export default createMiddleware({
+  locales,
   // Used when no locale matches
   defaultLocale: 'en',
 
