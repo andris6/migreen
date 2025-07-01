@@ -9,8 +9,10 @@ import { personalizedTherapyRecommendation, type PersonalizedTherapyRecommendati
 import { getStoredSessions, type TherapySession } from '@/lib/storage';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function RecommendationsPage() {
+  const { user } = useAuth();
   const [sessionHistory, setSessionHistory] = useState<TherapySession[]>([]);
   const [recommendations, setRecommendations] = useState<PersonalizedTherapyRecommendationOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,9 +21,9 @@ export default function RecommendationsPage() {
   const numSessions = sessionHistory.length;
 
   useEffect(() => {
-    const sessions = getStoredSessions();
+    const sessions = getStoredSessions(user?.id);
     setSessionHistory(sessions);
-  }, []);
+  }, [user]);
 
   const handleGetRecommendations = async () => {
     setIsLoading(true);

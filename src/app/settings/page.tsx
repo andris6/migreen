@@ -15,6 +15,7 @@ import { getStoredSettings, storeSettings } from '@/lib/storage';
 import { useToast } from '@/hooks/use-toast';
 import { useTheme } from 'next-themes';
 import { Sun, Moon, Bell, Vibrate } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 const settingsSchema = z.object({
   defaultSessionLength: z.number().min(5).max(90),
@@ -25,6 +26,7 @@ type SettingsFormValues = Pick<AppSettings, 'defaultSessionLength'>;
 export default function SettingsPage() {
   const { toast } = useToast();
   const { theme, setTheme } = useTheme();
+  const { user } = useAuth();
   const [mounted, setMounted] = useState(false);
   
   const form = useForm<SettingsFormValues>({
@@ -36,23 +38,25 @@ export default function SettingsPage() {
 
   useEffect(() => {
     setMounted(true);
-    const loadedSettings = getStoredSettings();
+    const loadedSettings = getStoredSettings(user?.id);
     if (loadedSettings) {
       form.reset({
         defaultSessionLength: loadedSettings.defaultSessionLength,
       });
+      // Sync theme from stored settings
+      setTheme(loadedSettings.darkMode ? 'dark' : 'light');
     }
-  }, [form]);
+  }, [form, user, setTheme]);
 
 
   const onSubmit = (data: SettingsFormValues) => {
-    const currentSettings = getStoredSettings() || { darkMode: theme === 'dark', notificationTime: "15min_before", vibrationFeedback: true };
+    const currentSettings = getStoredSettings(user?.id) || { darkMode: theme === 'dark', notificationTime: "15min_before", vibrationFeedback: true };
     const newSettings: AppSettings = {
       ...currentSettings,
       defaultSessionLength: data.defaultSessionLength,
       darkMode: theme === 'dark',
     };
-    storeSettings(newSettings);
+    storeSettings(newSettings, user?.id);
     toast({ title: "Settings Saved", description: "Your preferences have been updated." });
   };
 

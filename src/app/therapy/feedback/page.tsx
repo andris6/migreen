@@ -15,6 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import type { PreSessionData, TherapySession } from '@/types';
 import { storeSession } from '@/lib/storage';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 
 const formSchema = z.object({
   reliefScore: z.number().min(0).max(10),
@@ -27,6 +28,7 @@ type PostSessionFormValues = z.infer<typeof formSchema>;
 export default function FeedbackPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { user } = useAuth();
   const [preSessionData, setPreSessionData] = useState<PreSessionData | null>(null);
   const [actualDuration, setActualDuration] = useState<number | null>(null);
   const [sessionStartTime, setSessionStartTime] = useState<string | null>(null);
@@ -72,7 +74,7 @@ export default function FeedbackPage() {
       endTime: new Date().toISOString(),
     };
 
-    storeSession(therapySession);
+    storeSession(therapySession, user?.id);
     toast({ title: "Session Saved", description: "Your therapy session has been logged." });
 
     sessionStorage.removeItem('preSessionData');

@@ -42,6 +42,7 @@ import {
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
 import type { ChartConfig } from "@/components/ui/chart";
 import { availableTriggers } from '@/types';
+import { useAuth } from '@/hooks/useAuth';
 
 const chartConfig = {
   painIntensity: { label: "Pain Intensity", color: "hsl(var(--chart-1))" },
@@ -63,6 +64,7 @@ const getTriggerNames = (triggerIds: string[]): string => {
 };
 
 export default function HistoryPage() {
+  const { user } = useAuth();
   const [sessions, setSessions] = useState<TherapySession[]>([]);
   const [filteredSessions, setFilteredSessions] = useState<TherapySession[]>([]);
   const [dateFilter, setDateFilter] = useState<string>("all");
@@ -75,9 +77,9 @@ export default function HistoryPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const loadedSessions = getStoredSessions();
+    const loadedSessions = getStoredSessions(user?.id);
     setSessions(loadedSessions);
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     let tempSessions = [...sessions];
@@ -160,7 +162,7 @@ export default function HistoryPage() {
 
   const handleConfirmDelete = () => {
     if (sessionToDelete) {
-      deleteStoredSession(sessionToDelete);
+      deleteStoredSession(sessionToDelete, user?.id);
       setSessions(prevSessions => prevSessions.filter(s => s.id !== sessionToDelete));
       setSessionToDelete(null);
       toast({ title: "Session Deleted", description: "The session has been removed from your history." });

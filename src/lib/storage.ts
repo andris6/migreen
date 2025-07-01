@@ -1,12 +1,15 @@
 import type { TherapySession, Settings } from '@/types';
 
-const SESSIONS_KEY = 'migreen_sessions';
-const SETTINGS_KEY = 'migreen_settings';
+const getSessionsKey = (userId?: string) => `migreen_sessions_${userId || 'guest'}`;
+const getSettingsKey = (userId?: string) => `migreen_settings_${userId || 'guest'}`;
 
 // Helper to check if localStorage is available
 function isStorageAvailable(): boolean {
   try {
     const testKey = '__test__';
+    if (typeof window === 'undefined' || typeof window.localStorage === 'undefined') {
+        return false;
+    }
     window.localStorage.setItem(testKey, testKey);
     window.localStorage.removeItem(testKey);
     return true;
@@ -15,10 +18,11 @@ function isStorageAvailable(): boolean {
   }
 }
 
-export function getStoredSessions(): TherapySession[] {
+export function getStoredSessions(userId?: string): TherapySession[] {
   if (!isStorageAvailable()) return [];
+  const key = getSessionsKey(userId);
   try {
-    const stored = localStorage.getItem(SESSIONS_KEY);
+    const stored = localStorage.getItem(key);
     return stored ? JSON.parse(stored) : [];
   } catch (error) {
     console.error("Failed to parse sessions from localStorage:", error);
@@ -26,33 +30,36 @@ export function getStoredSessions(): TherapySession[] {
   }
 }
 
-export function storeSession(session: TherapySession): void {
+export function storeSession(session: TherapySession, userId?: string): void {
   if (!isStorageAvailable()) return;
+  const key = getSessionsKey(userId);
   try {
-    const sessions = getStoredSessions();
+    const sessions = getStoredSessions(userId);
     sessions.push(session);
     sessions.sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
-    localStorage.setItem(SESSIONS_KEY, JSON.stringify(sessions));
+    localStorage.setItem(key, JSON.stringify(sessions));
   } catch (error) {
     console.error("Failed to store session in localStorage:", error);
   }
 }
 
-export function deleteStoredSession(sessionId: string): void {
+export function deleteStoredSession(sessionId: string, userId?: string): void {
   if (!isStorageAvailable()) return;
+  const key = getSessionsKey(userId);
   try {
-    let sessions = getStoredSessions();
+    let sessions = getStoredSessions(userId);
     sessions = sessions.filter(s => s.id !== sessionId);
-    localStorage.setItem(SESSIONS_KEY, JSON.stringify(sessions));
+    localStorage.setItem(key, JSON.stringify(sessions));
   } catch (error) {
     console.error("Failed to delete session from localStorage:", error);
   }
 }
 
-export function getStoredSettings(): Settings | null {
+export function getStoredSettings(userId?: string): Settings | null {
   if (!isStorageAvailable()) return null;
+  const key = getSettingsKey(userId);
   try {
-    const stored = localStorage.getItem(SETTINGS_KEY);
+    const stored = localStorage.getItem(key);
     return stored ? JSON.parse(stored) : null;
   } catch (error) {
     console.error("Failed to parse settings from localStorage:", error);
@@ -60,10 +67,11 @@ export function getStoredSettings(): Settings | null {
   }
 }
 
-export function storeSettings(settings: Settings): void {
+export function storeSettings(settings: Settings, userId?: string): void {
   if (!isStorageAvailable()) return;
+  const key = getSettingsKey(userId);
   try {
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    localStorage.setItem(key, JSON.stringify(settings));
   } catch (error) {
     console.error("Failed to store settings in localStorage:", error);
   }
