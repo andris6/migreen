@@ -33,19 +33,16 @@
     "getStarted": "开始使用"
   },
   "DashboardPage": {
-    "title": "欢迎来到您的 Migreen 仪表盘",
+    "title": "您的 Migreen 仪表盘",
     "subtitle": "开始新的治疗疗程或查看您的进展。",
-    "startTherapyTitle": "开始治疗",
-    "startTherapyDescription": "开始您的绿光治疗疗程。",
-    "startTherapyContent": "输入您当前的疼痛程度和潜在的触发因素，以获得个性化的疗程。",
-    "startTherapyButton": "新疗程",
-    "viewHistoryTitle": "查看历史记录",
-    "viewHistoryDescription": "回顾您过去的疗程并跟踪进展。",
-    "viewHistoryContent": "分析您的疼痛程度、缓解分数和治疗时长。",
+    "startTherapyTitle": "新疗程",
+    "startTherapyDescription": "开始您的绿光治疗疗程以寻求缓解。",
+    "startTherapyButton": "开始治疗",
+    "viewHistoryTitle": "历史与洞察",
+    "viewHistoryDescription": "分析过去的疗程以发现规律。",
     "viewHistoryButton": "查看历史",
     "aiRecommendationsTitle": "AI建议",
-    "aiRecommendationsDescription": "为您的治疗获取个性化的见解。",
-    "aiRecommendationsContent": "利用AI根据您的数据发现最佳的治疗时长和时间。",
+    "aiRecommendationsDescription": "获取个性化建议以优化您的治疗。",
     "aiRecommendationsButton": "获取见解",
     "quickOverviewTitle": "快速概览",
     "quickOverviewContent": "您最近的活动和关键统计数据将显示在此处。"
@@ -182,5 +179,10 @@
     "notesLabel": "可选的疗程前备注",
     "notesPlaceholder": "任何其他细节，例如，吃过的特定食物、活动...",
     "startButton": "开始治疗疗程"
+  },
+  "GlobalError": {
+    "title": "应用程序错误",
+    "description": "很抱歉，我们这边出了点问题。请再试一次。",
+    "tryAgain": "再试一次"
   }
 }

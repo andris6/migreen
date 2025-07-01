@@ -33,20 +33,17 @@
     "getStarted": "始める"
   },
   "DashboardPage": {
-    "title": "Migreenダッシュボードへようこそ",
+    "title": "あなたのMigreenダッシュボード",
     "subtitle": "新しいセラピーセッションを開始するか、進捗を確認してください。",
-    "startTherapyTitle": "セラピーを開始",
-    "startTherapyDescription": "緑色光療法のセッションを開始します。",
-    "startTherapyContent": "現在の痛みのレベルと潜在的なトリガーを入力して、パーソナライズされたセッションを取得します。",
-    "startTherapyButton": "新しいセッション",
-    "viewHistoryTitle": "履歴を表示",
-    "viewHistoryDescription": "過去のセッションを確認し、進捗を追跡します。",
-    "viewHistoryContent": "時間の経過とともに痛みのレベル、緩和スコア、セラピー期間を分析します。",
+    "startTherapyTitle": "新しいセッション",
+    "startTherapyDescription": "緑色光療法のセッションを開始して、緩和を見つけましょう。",
+    "startTherapyButton": "セラピーを開始",
+    "viewHistoryTitle": "履歴とインサイト",
+    "viewHistoryDescription": "過去のセッションを分析してパターンを発見します。",
     "viewHistoryButton": "履歴を見る",
     "aiRecommendationsTitle": "AI推奨",
-    "aiRecommendationsDescription": "あなたのセラピーのためのパーソナライズされた洞察を得ます。",
-    "aiRecommendationsContent": "AIを活用して、データに基づいて最適なセラピー期間と時間帯を発見します。",
-    "aiRecommendationsButton": "洞察を得る",
+    "aiRecommendationsDescription": "セラピーを最適化するためのパーソナライズされた提案を取得します。",
+    "aiRecommendationsButton": "インサイトを得る",
     "quickOverviewTitle": "クイック概要",
     "quickOverviewContent": "最近のアクティビティと主要な統計がここに表示されます。"
   },
@@ -182,5 +179,10 @@
     "notesLabel": "オプションのセッション前メモ",
     "notesPlaceholder": "追加の詳細、例：特定の食べ物、活動...",
     "startButton": "セラピーセッションを開始"
+  },
+  "GlobalError": {
+    "title": "アプリケーションエラー",
+    "description": "申し訳ありませんが、こちら側で問題が発生しました。もう一度お試しください。",
+    "tryAgain": "再試行"
   }
 }

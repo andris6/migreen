@@ -33,19 +33,16 @@
     "getStarted": "Get Started"
   },
   "DashboardPage": {
-    "title": "Welcome to Your Migreen Dashboard",
+    "title": "Your Migreen Dashboard",
     "subtitle": "Start a new therapy session or review your progress.",
-    "startTherapyTitle": "Start Therapy",
-    "startTherapyDescription": "Begin your green light therapy session.",
-    "startTherapyContent": "Input your current pain level and potential triggers to get a personalized session.",
-    "startTherapyButton": "New Session",
-    "viewHistoryTitle": "View History",
-    "viewHistoryDescription": "Review your past sessions and track progress.",
-    "viewHistoryContent": "Analyze your pain levels, relief scores, and therapy durations over time.",
-    "viewHistoryButton": "See History",
+    "startTherapyTitle": "New Session",
+    "startTherapyDescription": "Begin your green light therapy session to find relief.",
+    "startTherapyButton": "Start Therapy",
+    "viewHistoryTitle": "History & Insights",
+    "viewHistoryDescription": "Analyze past sessions to discover patterns.",
+    "viewHistoryButton": "View History",
     "aiRecommendationsTitle": "AI Recommendations",
-    "aiRecommendationsDescription": "Get personalized insights for your therapy.",
-    "aiRecommendationsContent": "Leverage AI to discover optimal therapy durations and times based on your data.",
+    "aiRecommendationsDescription": "Get personalized suggestions to optimize your therapy.",
     "aiRecommendationsButton": "Get Insights",
     "quickOverviewTitle": "Quick Overview",
     "quickOverviewContent": "Your recent activity and key stats will appear here."
@@ -182,5 +179,10 @@
     "notesLabel": "Optional Pre-Session Notes",
     "notesPlaceholder": "Any additional details, e.g., specific food eaten, activities...",
     "startButton": "Start Therapy Session"
+  },
+  "GlobalError": {
+    "title": "Application Error",
+    "description": "We're sorry, something went wrong on our end. Please try again.",
+    "tryAgain": "Try Again"
   }
 }

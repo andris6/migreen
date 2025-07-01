@@ -33,19 +33,16 @@
     "getStarted": "Empezar"
   },
   "DashboardPage": {
-    "title": "Bienvenido a su Panel de Migreen",
+    "title": "Su Panel de Migreen",
     "subtitle": "Inicie una nueva sesión de terapia o revise su progreso.",
-    "startTherapyTitle": "Iniciar Terapia",
-    "startTherapyDescription": "Comience su sesión de terapia de luz verde.",
-    "startTherapyContent": "Introduzca su nivel de dolor actual y los posibles desencadenantes para obtener una sesión personalizada.",
-    "startTherapyButton": "Nueva Sesión",
-    "viewHistoryTitle": "Ver Historial",
-    "viewHistoryDescription": "Revise sus sesiones pasadas y siga su progreso.",
-    "viewHistoryContent": "Analice sus niveles de dolor, puntuaciones de alivio y duraciones de terapia a lo largo del tiempo.",
+    "startTherapyTitle": "Nueva Sesión",
+    "startTherapyDescription": "Comience su sesión de terapia de luz verde para encontrar alivio.",
+    "startTherapyButton": "Iniciar Terapia",
+    "viewHistoryTitle": "Historial e Información",
+    "viewHistoryDescription": "Analice sesiones pasadas para descubrir patrones.",
     "viewHistoryButton": "Ver Historial",
     "aiRecommendationsTitle": "Recomendaciones de IA",
-    "aiRecommendationsDescription": "Obtenga información personalizada para su terapia.",
-    "aiRecommendationsContent": "Aproveche la IA para descubrir duraciones y momentos óptimos de terapia basados en sus datos.",
+    "aiRecommendationsDescription": "Obtenga sugerencias personalizadas para optimizar su terapia.",
     "aiRecommendationsButton": "Obtener Análisis",
     "quickOverviewTitle": "Resumen Rápido",
     "quickOverviewContent": "Su actividad reciente y estadísticas clave aparecerán aquí."
@@ -182,5 +179,10 @@
     "notesLabel": "Notas Opcionales Pre-Sesión",
     "notesPlaceholder": "Cualquier detalle adicional, ej., comida específica, actividades...",
     "startButton": "Iniciar Sesión de Terapia"
+  },
+  "GlobalError": {
+    "title": "Error de Aplicación",
+    "description": "Lo sentimos, algo salió mal de nuestro lado. Por favor, inténtelo de nuevo.",
+    "tryAgain": "Intentar de Nuevo"
   }
 }

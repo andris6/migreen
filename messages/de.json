@@ -33,19 +33,16 @@
     "getStarted": "Loslegen"
   },
   "DashboardPage": {
-    "title": "Willkommen in Ihrem Migreen-Dashboard",
+    "title": "Ihr Migreen-Dashboard",
     "subtitle": "Starten Sie eine neue Therapiesitzung oder überprüfen Sie Ihren Fortschritt.",
-    "startTherapyTitle": "Therapie starten",
-    "startTherapyDescription": "Beginnen Sie Ihre Grünlichttherapie-Sitzung.",
-    "startTherapyContent": "Geben Sie Ihre aktuelle Schmerzstärke und mögliche Auslöser ein, um eine personalisierte Sitzung zu erhalten.",
-    "startTherapyButton": "Neue Sitzung",
-    "viewHistoryTitle": "Verlauf anzeigen",
-    "viewHistoryDescription": "Überprüfen Sie Ihre vergangenen Sitzungen und verfolgen Sie den Fortschritt.",
-    "viewHistoryContent": "Analysieren Sie Ihre Schmerzstärken, Linderungswerte und Therapiedauern im Laufe der Zeit.",
-    "viewHistoryButton": "Verlauf ansehen",
+    "startTherapyTitle": "Neue Sitzung",
+    "startTherapyDescription": "Beginnen Sie Ihre Grünlichttherapie-Sitzung, um Linderung zu finden.",
+    "startTherapyButton": "Therapie starten",
+    "viewHistoryTitle": "Verlauf & Einblicke",
+    "viewHistoryDescription": "Analysieren Sie vergangene Sitzungen, um Muster zu erkennen.",
+    "viewHistoryButton": "Verlauf anzeigen",
     "aiRecommendationsTitle": "KI-Empfehlungen",
-    "aiRecommendationsDescription": "Erhalten Sie personalisierte Einblicke für Ihre Therapie.",
-    "aiRecommendationsContent": "Nutzen Sie KI, um optimale Therapiedauern und -zeiten basierend auf Ihren Daten zu entdecken.",
+    "aiRecommendationsDescription": "Erhalten Sie personalisierte Vorschläge zur Optimierung Ihrer Therapie.",
     "aiRecommendationsButton": "Einblicke erhalten",
     "quickOverviewTitle": "Schnellübersicht",
     "quickOverviewContent": "Ihre letzten Aktivitäten und wichtigsten Statistiken werden hier angezeigt."
@@ -182,5 +179,10 @@
     "notesLabel": "Optionale Notizen vor der Sitzung",
     "notesPlaceholder": "Zusätzliche Details, z.B. gegessene Lebensmittel, Aktivitäten...",
     "startButton": "Therapiesitzung starten"
+  },
+  "GlobalError": {
+    "title": "Anwendungsfehler",
+    "description": "Es tut uns leid, auf unserer Seite ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    "tryAgain": "Erneut versuchen"
   }
 }

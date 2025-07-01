@@ -33,19 +33,16 @@
     "getStarted": "Começar"
   },
   "DashboardPage": {
-    "title": "Bem-vindo ao seu Painel Migreen",
+    "title": "Seu Painel Migreen",
     "subtitle": "Inicie uma nova sessão de terapia ou revise seu progresso.",
-    "startTherapyTitle": "Iniciar Terapia",
-    "startTherapyDescription": "Comece sua sessão de terapia de luz verde.",
-    "startTherapyContent": "Insira seu nível de dor atual e possíveis gatilhos para obter uma sessão personalizada.",
-    "startTherapyButton": "Nova Sessão",
-    "viewHistoryTitle": "Ver Histórico",
-    "viewHistoryDescription": "Revise suas sessões passadas e acompanhe o progresso.",
-    "viewHistoryContent": "Analise seus níveis de dor, pontuações de alívio e durações da terapia ao longo do tempo.",
+    "startTherapyTitle": "Nova Sessão",
+    "startTherapyDescription": "Comece sua sessão de terapia de luz verde para encontrar alívio.",
+    "startTherapyButton": "Iniciar Terapia",
+    "viewHistoryTitle": "Histórico e Insights",
+    "viewHistoryDescription": "Analise sessões passadas para descobrir padrões.",
     "viewHistoryButton": "Ver Histórico",
     "aiRecommendationsTitle": "Recomendações de IA",
-    "aiRecommendationsDescription": "Obtenha insights personalizados para sua terapia.",
-    "aiRecommendationsContent": "Aproveite a IA para descobrir durações e horários ideais de terapia com base em seus dados.",
+    "aiRecommendationsDescription": "Obtenha sugestões personalizadas para otimizar sua terapia.",
     "aiRecommendationsButton": "Obter Insights",
     "quickOverviewTitle": "Visão Geral Rápida",
     "quickOverviewContent": "Sua atividade recente e principais estatísticas aparecerão aqui."
@@ -182,5 +179,10 @@
     "notesLabel": "Notas Pré-Sessão Opcionais",
     "notesPlaceholder": "Quaisquer detalhes adicionais, ex: comida específica ingerida, atividades...",
     "startButton": "Iniciar Sessão de Terapia"
+  },
+  "GlobalError": {
+    "title": "Erro na Aplicação",
+    "description": "Lamentamos, algo deu errado do nosso lado. Por favor, tente novamente.",
+    "tryAgain": "Tentar Novamente"
   }
 }

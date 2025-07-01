@@ -33,19 +33,16 @@
     "getStarted": "Commencer"
   },
   "DashboardPage": {
-    "title": "Bienvenue sur votre tableau de bord Migreen",
+    "title": "Votre tableau de bord Migreen",
     "subtitle": "Commencez une nouvelle séance de thérapie ou consultez vos progrès.",
-    "startTherapyTitle": "Démarrer la thérapie",
-    "startTherapyDescription": "Commencez votre séance de thérapie par la lumière verte.",
-    "startTherapyContent": "Entrez votre niveau de douleur actuel et les déclencheurs potentiels pour obtenir une séance personnalisée.",
-    "startTherapyButton": "Nouvelle séance",
-    "viewHistoryTitle": "Voir l'historique",
-    "viewHistoryDescription": "Passez en revue vos séances passées et suivez vos progrès.",
-    "viewHistoryContent": "Analysez vos niveaux de douleur, vos scores de soulagement et la durée de vos thérapies au fil du temps.",
+    "startTherapyTitle": "Nouvelle séance",
+    "startTherapyDescription": "Commencez votre séance de thérapie par la lumière verte pour trouver un soulagement.",
+    "startTherapyButton": "Démarrer la thérapie",
+    "viewHistoryTitle": "Historique et aperçus",
+    "viewHistoryDescription": "Analysez les séances passées pour découvrir des schémas.",
     "viewHistoryButton": "Voir l'historique",
     "aiRecommendationsTitle": "Recommandations IA",
-    "aiRecommendationsDescription": "Obtenez des informations personnalisées pour votre thérapie.",
-    "aiRecommendationsContent": "Tirez parti de l'IA pour découvrir les durées et les moments optimaux de thérapie en fonction de vos données.",
+    "aiRecommendationsDescription": "Obtenez des suggestions personnalisées pour optimiser votre thérapie.",
     "aiRecommendationsButton": "Obtenir des aperçus",
     "quickOverviewTitle": "Aperçu rapide",
     "quickOverviewContent": "Votre activité récente et vos statistiques clés apparaîtront ici."
@@ -182,5 +179,10 @@
     "notesLabel": "Notes facultatives pré-session",
     "notesPlaceholder": "Détails supplémentaires, par ex. aliments spécifiques consommés, activités...",
     "startButton": "Démarrer la séance de thérapie"
+  },
+  "GlobalError": {
+    "title": "Erreur d'Application",
+    "description": "Nous sommes désolés, une erreur s'est produite de notre côté. Veuillez réessayer.",
+    "tryAgain": "Réessayer"
   }
 }

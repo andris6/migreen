@@ -33,20 +33,17 @@
     "getStarted": "Kezdés"
   },
   "DashboardPage": {
-    "title": "Üdvözöljük a Migreen Irányítópultján",
+    "title": "Az Ön Migreen Irányítópultja",
     "subtitle": "Kezdjen egy új terápiás ülést vagy tekintse át a haladását.",
-    "startTherapyTitle": "Terápia indítása",
-    "startTherapyDescription": "Kezdje el a zöld fény terápiás ülését.",
-    "startTherapyContent": "Adja meg a jelenlegi fájdalomszintjét és a lehetséges kiváltó okokat egy személyre szabott üléshez.",
-    "startTherapyButton": "Új Ülés",
-    "viewHistoryTitle": "Előzmények megtekintése",
-    "viewHistoryDescription": "Tekintse át a korábbi üléseit és kövesse nyomon a haladást.",
-    "viewHistoryContent": "Elemezze a fájdalomszinteket, a megkönnyebbülési pontszámokat és a terápia időtartamát.",
-    "viewHistoryButton": "Előzmények",
+    "startTherapyTitle": "Új Ülés",
+    "startTherapyDescription": "Kezdje el a zöld fény terápiás ülését a megkönnyebbülésért.",
+    "startTherapyButton": "Terápia indítása",
+    "viewHistoryTitle": "Előzmények és Elemzések",
+    "viewHistoryDescription": "Elemezze a korábbi üléseket a mintázatok felfedezéséhez.",
+    "viewHistoryButton": "Előzmények megtekintése",
     "aiRecommendationsTitle": "MI Ajánlások",
-    "aiRecommendationsDescription": "Személyre szabott betekintést kaphat a terápiájához.",
-    "aiRecommendationsContent": "Használja ki a MI-t az optimális terápia időtartamok és időpontok felfedezéséhez az adatai alapján.",
-    "aiRecommendationsButton": "Betekintések",
+    "aiRecommendationsDescription": "Személyre szabott javaslatokat kaphat a terápia optimalizálásához.",
+    "aiRecommendationsButton": "Elemzések kérése",
     "quickOverviewTitle": "Gyors Áttekintés",
     "quickOverviewContent": "A legutóbbi tevékenységei és a főbb statisztikák itt fognak megjelenni."
   },
@@ -182,5 +179,10 @@
     "notesLabel": "Opcionális jegyzetek (ülés előtt)",
     "notesPlaceholder": "Bármilyen további részlet, pl. elfogyasztott étel, tevékenységek...",
     "startButton": "Terápiás ülés indítása"
+  },
+  "GlobalError": {
+    "title": "Alkalmazás Hiba",
+    "description": "Sajnáljuk, hiba történt a mi oldalunkon. Kérjük, próbálja újra.",
+    "tryAgain": "Próbálja Újra"
   }
 }
