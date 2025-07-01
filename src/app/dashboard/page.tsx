@@ -9,7 +9,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-10">
       <section className="text-center">
-        <h1 className="text-4xl md:text-5xl font-bold font-headline text-primary mb-2 animate-fade-in-down">
+        <h1 className="text-3xl md:text-4xl font-bold font-headline text-primary mb-2 animate-fade-in-down">
           Your Migreen Dashboard
         </h1>
         <p className="text-lg text-foreground/80 max-w-2xl mx-auto">

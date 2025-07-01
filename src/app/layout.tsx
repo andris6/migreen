@@ -4,10 +4,14 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import ThemeProvider from '@/components/layout/ThemeProvider';
 import PageShell from '@/components/layout/PageShell';
-import { Inter } from 'next/font/google';
+import { PT_Sans } from 'next/font/google';
 import { AuthProvider } from '@/hooks/useAuth';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const ptSans = PT_Sans({ 
+  subsets: ['latin'], 
+  weight: ['400', '700'],
+  variable: '--font-pt-sans' 
+});
 
 export const metadata: Metadata = {
   title: 'Migreen',
@@ -21,7 +25,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-body antialiased`}>
+      <body className={`${ptSans.variable} font-body antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

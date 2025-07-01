@@ -4,11 +4,10 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Loader2, Wand2, AlertCircle, Clock, Calendar, ListChecks } from 'lucide-react';
+import { Loader2, Wand2, AlertCircle, Clock, Calendar, ListChecks, Info } from 'lucide-react';
 import { personalizedTherapyRecommendation, type PersonalizedTherapyRecommendationOutput } from '@/ai/flows/personalized-therapy-recommendation';
 import { getStoredSessions, type TherapySession } from '@/lib/storage';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/hooks/useAuth';
 
 export default function RecommendationsPage() {
@@ -52,22 +51,17 @@ export default function RecommendationsPage() {
     <div className="max-w-3xl mx-auto space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline flex items-center gap-2 text-3xl"><Wand2 className="h-8 w-8 text-primary" /> AI Personalized Therapy Insights</CardTitle>
+          <CardTitle className="font-headline flex items-center gap-2 text-2xl"><Wand2 className="h-8 w-8 text-primary" /> AI Personalized Therapy Insights</CardTitle>
           <CardDescription>Get AI-powered suggestions to optimize your therapy regimen based on your session history.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div>
-            <h3 className="font-semibold mb-2">Your Session History Summary:</h3>
-            <ScrollArea className="h-48 w-full rounded-md border p-3 bg-muted/50">
-              <pre className="text-xs whitespace-pre-wrap">{sessionHistory.length > 0 ? JSON.stringify(sessionHistory.map(s => ({
-                  date: s.startTime,
-                  pain: s.painIntensity,
-                  relief: s.reliefScore,
-                  duration: s.actualDuration
-              })), null, 2) : "Loading session history..."}</pre>
-            </ScrollArea>
-            <p className="text-xs text-muted-foreground mt-1">{numSessions} {numSessions === 1 ? 'session' : 'sessions'} recorded.</p>
-          </div>
+            <Alert>
+              <Info className="h-4 w-4" />
+              <AlertTitle>How It Works</AlertTitle>
+              <AlertDescription>
+                Our AI analyzes your recorded session history to identify patterns and provide personalized recommendations. The more sessions you log ({numSessions} recorded so far), the more accurate your insights will be. Your session data is sent for analysis when you click the button below.
+              </AlertDescription>
+            </Alert>
 
           {error && (
             <Alert variant="destructive">

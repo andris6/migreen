@@ -69,7 +69,7 @@ export default function SettingsPage() {
        <form onSubmit={form.handleSubmit(onSubmit)}>
         <Card>
           <CardHeader>
-            <CardTitle className="font-headline text-3xl">Application Settings</CardTitle>
+            <CardTitle className="font-headline text-2xl">Application Settings</CardTitle>
             <CardDescription>Customize your Migreen experience.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-8">

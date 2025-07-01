@@ -179,7 +179,7 @@ export default function HistoryPage() {
     <div className="space-y-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold font-headline">Session History & Analytics</h1>
+          <h1 className="text-2xl font-bold font-headline">Session History & Analytics</h1>
           <p className="text-muted-foreground">Review your past therapy sessions and analyze trends.</p>
         </div>
         <div className="flex items-center gap-2">
