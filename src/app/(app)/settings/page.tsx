@@ -14,17 +14,16 @@ import { getStoredSettings, storeSettings } from '@/lib/storage';
 import { useToast } from '@/hooks/use-toast';
 import { useTheme } from 'next-themes';
 import { Sun, Moon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 const settingsSchema = z.object({
   defaultSessionLength: z.number().min(5).max(90),
-  // notificationTime: z.string(), // Conceptual
-  // vibrationFeedback: z.boolean(), // Conceptual
 });
 
-type SettingsFormValues = Pick<AppSettings, 'defaultSessionLength'>; // Removed vibrationFeedback for now
-
+type SettingsFormValues = Pick<AppSettings, 'defaultSessionLength'>;
 
 export default function SettingsPage() {
+  const t = useTranslations('SettingsPage');
   const { toast } = useToast();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -33,7 +32,6 @@ export default function SettingsPage() {
     resolver: zodResolver(settingsSchema),
     defaultValues: {
       defaultSessionLength: 30,
-      // vibrationFeedback: true, // Default value if used
     },
   });
 
@@ -43,42 +41,37 @@ export default function SettingsPage() {
     if (loadedSettings) {
       form.reset({
         defaultSessionLength: loadedSettings.defaultSessionLength,
-        // vibrationFeedback: loadedSettings.vibrationFeedback,
       });
-      // Theme is handled by next-themes, but we could sync if storing in our settings obj
-      // setTheme(loadedSettings.darkMode ? 'dark' : 'light');
     }
   }, [form, setTheme]);
 
 
   const onSubmit = (data: SettingsFormValues) => {
-    const currentSettings = getStoredSettings() || { darkMode: theme === 'dark', notificationTime: "15min_before", vibrationFeedback: true }; // Provide defaults for other settings
+    const currentSettings = getStoredSettings() || { darkMode: theme === 'dark', notificationTime: "15min_before", vibrationFeedback: true };
     const newSettings: AppSettings = {
       ...currentSettings,
       defaultSessionLength: data.defaultSessionLength,
-      // vibrationFeedback: data.vibrationFeedback,
-      darkMode: theme === 'dark', // Sync theme from next-themes
+      darkMode: theme === 'dark',
     };
     storeSettings(newSettings);
-    toast({ title: "Settings Saved", description: "Your preferences have been updated." });
+    toast({ title: t('saveToastTitle'), description: t('saveToastDescription') });
   };
 
   if (!mounted) {
-    return null; // Avoid hydration mismatch
+    return null;
   }
 
   return (
     <div className="max-w-2xl mx-auto">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline">Application Settings</CardTitle>
-          <CardDescription>Customize your Migreen experience.</CardDescription>
+          <CardTitle className="font-headline">{t('title')}</CardTitle>
+          <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            {/* Default Session Length */}
             <div className="space-y-2">
-              <Label htmlFor="defaultSessionLength" className="text-lg">Default Session Length (minutes)</Label>
+              <Label htmlFor="defaultSessionLength" className="text-lg">{t('sessionLengthLabel')}</Label>
               <Controller
                 name="defaultSessionLength"
                 control={form.control}
@@ -100,34 +93,31 @@ export default function SettingsPage() {
               )}
             </div>
 
-            {/* Dark Mode Toggle - using next-themes */}
             <div className="flex items-center justify-between space-y-2">
-              <Label htmlFor="darkModeToggle" className="text-lg">Dark Mode</Label>
+              <Label htmlFor="darkModeToggle" className="text-lg">{t('darkModeLabel')}</Label>
               <Switch
                 id="darkModeToggle"
                 checked={theme === 'dark'}
                 onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
-                aria-label="Toggle dark mode"
+                aria-label={t('darkModeSr')}
               >
                 {theme === 'dark' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
               </Switch>
             </div>
             
-            {/* Conceptual Settings (placeholders) */}
             <div className="space-y-2 opacity-50">
-              <Label className="text-lg">Notification Time (Conceptual)</Label>
-              <Input value="15 minutes before" disabled />
-              <p className="text-xs text-muted-foreground">Reminder notifications are a planned feature.</p>
+              <Label className="text-lg">{t('notificationLabel')}</Label>
+              <Input value={t('notificationPlaceholder')} disabled />
+              <p className="text-xs text-muted-foreground">{t('notificationDescription')}</p>
             </div>
 
             <div className="flex items-center justify-between space-y-2 opacity-50">
-              <Label className="text-lg">Vibration Feedback (Conceptual)</Label>
+              <Label className="text-lg">{t('vibrationLabel')}</Label>
               <Switch checked={true} disabled />
             </div>
 
-
             <Button type="submit" className="w-full text-lg py-3">
-              Save Settings
+              {t('saveButton')}
             </Button>
           </form>
         </CardContent>

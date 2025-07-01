@@ -1,16 +1,17 @@
-
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import type { PreSessionData } from '@/types';
-import { Button } from '@/components/ui/button'; // Changed from LongPressButton
+import { Button } from '@/components/ui/button';
 import { AlertTriangle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { useTranslations } from 'next-intl';
 
 const GREEN_LIGHT_COLOR = '#00BA00'; // Approx 530nm
 
 export default function TherapySessionPage() {
+  const t = useTranslations('SessionPage');
   const router = useRouter();
   const [preSessionData, setPreSessionData] = useState<PreSessionData | null>(null);
   const [timeLeft, setTimeLeft] = useState(0); // in seconds
@@ -27,17 +28,14 @@ export default function TherapySessionPage() {
       setInitialDuration(parsedData.recommendedDuration * 60);
       startTimeRef.current = new Date();
     } else {
-      // No data, redirect or show error
       router.replace('/therapy/start');
     }
 
-    // Prevent screen sleep (best effort, browser support varies)
     let wakeLock: WakeLockSentinel | null = null;
     const requestWakeLock = async () => {
       if ('wakeLock' in navigator && navigator.wakeLock) {
         try {
           wakeLock = await navigator.wakeLock.request('screen');
-          // console.log('Screen Wake Lock activated.'); // Optional: for debugging success
         } catch (err) {
           console.warn(
             `Screen Wake Lock request failed: ${(err as Error).name} - ${(err as Error).message}. ` +
@@ -53,17 +51,13 @@ export default function TherapySessionPage() {
 
     return () => {
       if (wakeLock) {
-        wakeLock.release().catch((err) => {
-          // Silently catch release errors, or log if needed for debugging
-          // console.warn('Failed to release wake lock:', (err as Error).message);
-        });
+        wakeLock.release().catch(() => {});
       }
     };
   }, [router]);
 
   useEffect(() => {
-    if (timeLeft <= 0 && initialDuration > 0) { // Ensure it only triggers if session was active
-      // Session finished
+    if (timeLeft <= 0 && initialDuration > 0) {
       const actualDurationMinutes = Math.round((initialDuration - timeLeft) / 60);
       sessionStorage.setItem('actualDuration', actualDurationMinutes.toString());
       sessionStorage.setItem('sessionStartTime', startTimeRef.current?.toISOString() || new Date().toISOString());
@@ -90,7 +84,7 @@ export default function TherapySessionPage() {
     let actualDurationMinutes = 0;
     if (startTimeRef.current) {
       actualDurationMinutes = Math.round((endTime.getTime() - startTimeRef.current.getTime()) / (1000 * 60));
-    } else { // Fallback if startTimeRef is somehow null
+    } else {
        actualDurationMinutes = Math.round((initialDuration - timeLeft) / 60);
     }
     
@@ -102,7 +96,7 @@ export default function TherapySessionPage() {
   if (!preSessionData) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <p>Loading session data...</p>
+        <p>{t('loading')}</p>
       </div>
     );
   }
@@ -112,7 +106,7 @@ export default function TherapySessionPage() {
       className="fixed inset-0 p-4 transition-colors duration-500"
       style={{ backgroundColor: GREEN_LIGHT_COLOR }}
       role="application"
-      aria-label="Green light therapy session active"
+      aria-label={t('titleSr')}
     >
       <h1 
           className="absolute top-4 left-4 text-4xl font-mono font-bold"
@@ -125,11 +119,11 @@ export default function TherapySessionPage() {
       
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-48">
         <Button
-          onClick={handleExit} // Changed from onLongPress
-          className="bg-white/25 hover:bg-white/40 text-white border border-white/40 py-4 text-lg shadow-xl w-full" // Added w-full for consistency
-          aria-label="Exit session"
+          onClick={handleExit}
+          className="bg-white/25 hover:bg-white/40 text-white border border-white/40 py-4 text-lg shadow-xl w-full"
+          aria-label={t('exitButtonSr')}
         >
-          Exit Session
+          {t('exitButton')}
         </Button>
       </div>
 
@@ -138,10 +132,9 @@ export default function TherapySessionPage() {
           <div className="flex items-start space-x-3">
             <AlertTriangle className="h-6 w-6 mt-0.5 text-yellow-300 flex-shrink-0" />
             <div>
-              <h3 className="text-base font-semibold">Important</h3>
+              <h3 className="text-base font-semibold">{t('importantTipTitle')}</h3>
               <p className="text-sm">
-                Keep this screen active. Do not navigate away or lock your device.
-                Relax and focus on the green light.
+                {t('importantTipContent')}
               </p>
             </div>
           </div>

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -17,10 +16,11 @@ import type { HeadArea, PreSessionData } from '@/types';
 import { availableTriggers, availableHeadAreas } from '@/types';
 import { Info } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useTranslations } from 'next-intl';
 
 const formSchema = z.object({
   painIntensity: z.number().min(0).max(10),
-  affectedArea: z.string().optional(), // Changed from array
+  affectedArea: z.string().optional(),
   triggers: z.array(z.string()).optional(),
   notes: z.string().max(500, "Notes must be 500 characters or less.").optional(),
   sessionDuration: z.number().min(5).max(90),
@@ -37,9 +37,10 @@ const formSchema = z.object({
 type PreSessionFormValues = z.infer<typeof formSchema>;
 
 export default function StartTherapyPage() {
+  const t = useTranslations('StartTherapyPage');
   const router = useRouter();
-  const [recommendedDuration, setRecommendedDuration] = useState(30); // Default
-  
+  const [recommendedDuration, setRecommendedDuration] = useState(30);
+
   const form = useForm<PreSessionFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,7 +55,7 @@ export default function StartTherapyPage() {
   const painIntensity = form.watch('painIntensity');
 
   useEffect(() => {
-    let newDuration = 20; // Default for pain 0-3
+    let newDuration = 20;
     if (painIntensity >= 7) {
       newDuration = 60;
     } else if (painIntensity >= 4) {
@@ -63,11 +64,10 @@ export default function StartTherapyPage() {
     setRecommendedDuration(newDuration);
     form.setValue('sessionDuration', newDuration);
     if (painIntensity === 0) {
-        form.setValue('affectedArea', 'none'); // Default to 'none' if no pain
+        form.setValue('affectedArea', 'none');
     } else if (painIntensity > 0 && form.getValues('affectedArea') === 'none') {
-        form.setValue('affectedArea', undefined); // Clear 'none' if pain is present
+        form.setValue('affectedArea', undefined);
     }
-
   }, [painIntensity, form]);
   
   const onSubmit = (data: PreSessionFormValues) => {
@@ -86,14 +86,13 @@ export default function StartTherapyPage() {
     <div className="max-w-2xl mx-auto">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline">Start New Therapy Session</CardTitle>
-          <CardDescription>Log your current symptoms to tailor your session.</CardDescription>
+          <CardTitle className="font-headline">{t('title')}</CardTitle>
+          <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            {/* Pain Intensity */}
             <div className="space-y-2">
-              <Label htmlFor="painIntensity" className="text-lg">Pain Intensity: {form.watch('painIntensity')}/10</Label>
+              <Label htmlFor="painIntensity" className="text-lg">{t('painLabel', { score: form.watch('painIntensity') })}</Label>
               <Controller
                 name="painIntensity"
                 control={form.control}
@@ -105,16 +104,15 @@ export default function StartTherapyPage() {
                     step={1}
                     value={[field.value]}
                     onValueChange={(value) => field.onChange(value[0])}
-                    aria-label="Pain intensity slider"
+                    aria-label={t('painSr')}
                   />
                 )}
               />
             </div>
 
-            {/* Affected Head Areas with Radio Buttons */}
             {painIntensity > 0 && (
               <div className="space-y-2">
-                <Label className="text-lg">Affected Head Area</Label>
+                <Label className="text-lg">{t('areaLabel')}</Label>
                 <Controller
                   name="affectedArea"
                   control={form.control}
@@ -134,14 +132,13 @@ export default function StartTherapyPage() {
                   )}
                 />
                 {form.formState.errors.affectedArea && (
-                  <p className="text-sm text-destructive">{form.formState.errors.affectedArea.message}</p>
+                  <p className="text-sm text-destructive">{t('areaError')}</p>
                 )}
               </div>
             )}
 
-            {/* Potential Triggers */}
             <div className="space-y-2">
-              <Label className="text-lg">Potential Triggers</Label>
+              <Label className="text-lg">{t('triggersLabel')}</Label>
               <div className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
                 {availableTriggers.map((trigger) => (
                   <Controller
@@ -167,14 +164,13 @@ export default function StartTherapyPage() {
               </div>
             </div>
             
-            {/* Session Duration Recommendation */}
             <div className="space-y-2">
-                <Label htmlFor="sessionDuration" className="text-lg">Session Duration: {form.watch('sessionDuration')} minutes</Label>
+                <Label htmlFor="sessionDuration" className="text-lg">{t('durationLabel', { duration: form.watch('sessionDuration') })}</Label>
                 <Alert>
                     <Info className="h-4 w-4" />
-                    <AlertTitle>Recommended Duration</AlertTitle>
+                    <AlertTitle>{t('durationAlertTitle')}</AlertTitle>
                     <AlertDescription>
-                        Based on your pain level, we recommend a {recommendedDuration}-minute session. You can adjust this below. Max: 90 minutes.
+                        {t('durationAlertDescription', { duration: recommendedDuration })}
                     </AlertDescription>
                 </Alert>
                 <Controller
@@ -188,22 +184,21 @@ export default function StartTherapyPage() {
                         step={5}
                         value={[field.value]}
                         onValueChange={(value) => field.onChange(value[0])}
-                        aria-label="Session duration slider"
+                        aria-label={t('durationSr')}
                         />
                     )}
                 />
             </div>
 
-            {/* Optional Notes */}
             <div className="space-y-2">
-              <Label htmlFor="notes" className="text-lg">Optional Pre-Session Notes</Label>
+              <Label htmlFor="notes" className="text-lg">{t('notesLabel')}</Label>
               <Controller
                 name="notes"
                 control={form.control}
                 render={({ field }) => (
                   <Textarea
                     id="notes"
-                    placeholder="Any additional details, e.g., specific food eaten, activities..."
+                    placeholder={t('notesPlaceholder')}
                     {...field}
                     className="min-h-[100px]"
                   />
@@ -215,7 +210,7 @@ export default function StartTherapyPage() {
             </div>
 
             <Button type="submit" className="w-full text-lg py-6">
-              Start Therapy Session
+              {t('startButton')}
             </Button>
           </form>
         </CardContent>

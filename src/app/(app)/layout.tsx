@@ -1,9 +1,9 @@
-
 'use client'; // Required for Header which uses useTheme and usePathname
 
 import { Header } from '@/components/layout/Header';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 
 export default function AppLayout({
   children,
@@ -11,6 +11,7 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const t = useTranslations('Footer');
   const isTherapySessionPage = pathname === '/therapy/session';
 
   return (
@@ -25,7 +26,7 @@ export default function AppLayout({
         {children}
       </main>
       <footer className="py-6 text-center text-sm text-muted-foreground border-t">
-        Migreen &copy; {new Date().getFullYear()}
+        {t('copyright', { year: new Date().getFullYear() })}
       </footer>
     </div>
   );

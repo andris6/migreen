@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -12,9 +11,10 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import type { PreSessionData, TherapySession } from '@/types'; // PostSessionData removed as its fields are in formSchema
+import type { PreSessionData, TherapySession } from '@/types';
 import { storeSession } from '@/lib/storage';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslations } from 'next-intl';
 
 const formSchema = z.object({
   reliefScore: z.number().min(0).max(10),
@@ -25,6 +25,7 @@ const formSchema = z.object({
 type PostSessionFormValues = z.infer<typeof formSchema>;
 
 export default function FeedbackPage() {
+  const t = useTranslations('FeedbackPage');
   const router = useRouter();
   const { toast } = useToast();
   const [preSessionData, setPreSessionData] = useState<PreSessionData | null>(null);
@@ -50,22 +51,22 @@ export default function FeedbackPage() {
       setActualDuration(parseInt(storedActualDuration, 10));
       setSessionStartTime(storedStartTime);
     } else {
-      toast({ title: "Error", description: "Session data missing. Please start a new session.", variant: "destructive" });
+      toast({ title: t('errorTitle'), description: t('errorMissingData'), variant: "destructive" });
       router.replace('/therapy/start');
     }
-  }, [router, toast]);
+  }, [router, toast, t]);
 
   const onSubmit = (data: PostSessionFormValues) => {
     if (!preSessionData || actualDuration === null || sessionStartTime === null) {
-      toast({ title: "Error", description: "Could not save session. Critical data missing.", variant: "destructive" });
+      toast({ title: t('errorTitle'), description: t('errorSave'), variant: "destructive" });
       return;
     }
 
     const therapySession: TherapySession = {
-      ...preSessionData, // Contains preSessionNotes
+      ...preSessionData,
       reliefScore: data.reliefScore,
       medicationTaken: data.medicationTaken,
-      postSessionNotes: data.notes, // Map form notes to postSessionNotes
+      postSessionNotes: data.notes,
       id: new Date().toISOString() + Math.random().toString(36).substring(2,9),
       startTime: sessionStartTime,
       actualDuration: actualDuration,
@@ -73,7 +74,7 @@ export default function FeedbackPage() {
     };
 
     storeSession(therapySession);
-    toast({ title: "Session Saved", description: "Your therapy session has been logged." });
+    toast({ title: t('saveToastTitle'), description: t('saveToastDescription') });
 
     sessionStorage.removeItem('preSessionData');
     sessionStorage.removeItem('actualDuration');
@@ -85,7 +86,7 @@ export default function FeedbackPage() {
   if (!preSessionData || actualDuration === null) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p>Loading feedback form...</p>
+        <p>{t('loading')}</p>
       </div>
     );
   }
@@ -94,14 +95,13 @@ export default function FeedbackPage() {
     <div className="max-w-2xl mx-auto">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline">Session Feedback</CardTitle>
-          <CardDescription>Log how you feel after the therapy session. Actual duration: {actualDuration} minutes.</CardDescription>
+          <CardTitle className="font-headline">{t('title')}</CardTitle>
+          <CardDescription>{t('description', { duration: actualDuration })}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            {/* Relief Score */}
             <div className="space-y-2">
-              <Label htmlFor="reliefScore" className="text-lg">Relief Score: {form.watch('reliefScore')}/10</Label>
+              <Label htmlFor="reliefScore" className="text-lg">{t('reliefScoreLabel', { score: form.watch('reliefScore') })}</Label>
               <Controller
                 name="reliefScore"
                 control={form.control}
@@ -113,15 +113,14 @@ export default function FeedbackPage() {
                     step={1}
                     value={[field.value]}
                     onValueChange={(value) => field.onChange(value[0])}
-                    aria-label="Relief score slider"
+                    aria-label={t('reliefScoreSr')}
                   />
                 )}
               />
             </div>
 
-            {/* Medication Taken */}
             <div className="flex items-center justify-between space-y-2">
-              <Label htmlFor="medicationTaken" className="text-lg">Medication Taken?</Label>
+              <Label htmlFor="medicationTaken" className="text-lg">{t('medsLabel')}</Label>
               <Controller
                 name="medicationTaken"
                 control={form.control}
@@ -130,22 +129,21 @@ export default function FeedbackPage() {
                     id="medicationTaken"
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    aria-label="Medication taken switch"
+                    aria-label={t('medsSr')}
                   />
                 )}
               />
             </div>
             
-            {/* Optional Notes */}
             <div className="space-y-2">
-              <Label htmlFor="notes" className="text-lg">Optional Post-Session Notes</Label>
+              <Label htmlFor="notes" className="text-lg">{t('notesLabel')}</Label>
               <Controller
                 name="notes"
                 control={form.control}
                 render={({ field }) => (
                   <Textarea
                     id="notes"
-                    placeholder="Any changes noticed, side effects, etc."
+                    placeholder={t('notesPlaceholder')}
                     {...field}
                     className="min-h-[100px]"
                   />
@@ -157,7 +155,7 @@ export default function FeedbackPage() {
             </div>
 
             <Button type="submit" className="w-full text-lg py-6">
-              Save Session & View History
+              {t('saveButton')}
             </Button>
           </form>
         </CardContent>

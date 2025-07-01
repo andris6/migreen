@@ -1,4 +1,3 @@
-
 import { Logo } from '@/components/layout/Logo';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
@@ -8,12 +7,16 @@ import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import NavLinks from './NavLinks';
 import { cn } from '@/lib/utils';
+import { LanguageSwitcher } from '../i18n/LanguageSwitcher';
+import { Separator } from '../ui/separator';
+import { useTranslations } from 'next-intl';
 
 interface HeaderProps {
   className?: string;
 }
 
 export function Header({ className: propClassName }: HeaderProps) {
+  const t = useTranslations('Header');
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -52,24 +55,25 @@ export function Header({ className: propClassName }: HeaderProps) {
           <NavLinks />
         </div>
         <div className="flex items-center space-x-3 mr-4">
+          <LanguageSwitcher />
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            aria-label="Toggle theme"
+            aria-label={t('toggle_theme')}
             className="group"
           >
             {theme === 'dark' ? <Sun className="h-5 w-5 text-accent group-hover:text-accent-foreground" /> : <Moon className="h-5 w-5 text-accent group-hover:text-accent-foreground" />}
           </Button>
           <Link href="/settings" passHref>
-            <Button variant="ghost" size="icon" aria-label="Settings" className="group">
+            <Button variant="ghost" size="icon" aria-label={t('settings')} className="group">
               <Settings className="h-5 w-5 text-accent group-hover:text-accent-foreground" />
             </Button>
           </Link>
           <div className="md:hidden">
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" aria-label="Open menu" className="group">
+                <Button variant="ghost" size="icon" aria-label={t('open_menu')} className="group">
                   <Menu className="h-6 w-6 text-accent group-hover:text-accent-foreground" />
                 </Button>
               </SheetTrigger>

@@ -3,16 +3,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Lightbulb, BarChart3, Brain, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function DashboardPage() {
+  const t = useTranslations('DashboardPage');
+
   return (
     <div className="space-y-8">
       <section className="text-center">
         <h1 className="text-4xl font-bold font-headline text-primary mb-2">
-          Welcome to Your Migreen Dashboard
+          {t('title')}
         </h1>
         <p className="text-lg text-foreground/80">
-          Start a new therapy session or review your progress.
+          {t('subtitle')}
         </p>
       </section>
 
@@ -21,17 +24,17 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Lightbulb className="w-6 h-6 text-primary" />
-              Start Therapy
+              {t('startTherapyTitle')}
             </CardTitle>
-            <CardDescription>Begin your green light therapy session.</CardDescription>
+            <CardDescription>{t('startTherapyDescription')}</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="mb-4">
-              Input your current pain level and potential triggers to get a personalized session.
+              {t('startTherapyContent')}
             </p>
             <Link href="/therapy/start" passHref>
               <Button className="w-full">
-                New Session <ArrowRight className="ml-2 h-4 w-4" />
+                {t('startTherapyButton')} <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </CardContent>
@@ -41,17 +44,17 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BarChart3 className="w-6 h-6 text-primary" />
-              View History
+              {t('viewHistoryTitle')}
             </CardTitle>
-            <CardDescription>Review your past sessions and track progress.</CardDescription>
+            <CardDescription>{t('viewHistoryDescription')}</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="mb-4">
-              Analyze your pain levels, relief scores, and therapy durations over time.
+              {t('viewHistoryContent')}
             </p>
             <Link href="/history" passHref>
               <Button variant="outline" className="w-full">
-                See History <ArrowRight className="ml-2 h-4 w-4" />
+                {t('viewHistoryButton')} <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </CardContent>
@@ -61,17 +64,17 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Brain className="w-6 h-6 text-primary" />
-              AI Recommendations
+              {t('aiRecommendationsTitle')}
             </CardTitle>
-            <CardDescription>Get personalized insights for your therapy.</CardDescription>
+            <CardDescription>{t('aiRecommendationsDescription')}</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="mb-4">
-              Leverage AI to discover optimal therapy durations and times based on your data.
+              {t('aiRecommendationsContent')}
             </p>
             <Link href="/recommendations" passHref>
               <Button variant="outline" className="w-full">
-                Get Insights <ArrowRight className="ml-2 h-4 w-4" />
+                {t('aiRecommendationsButton')} <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </CardContent>
@@ -79,14 +82,12 @@ export default function DashboardPage() {
       </div>
 
       <section>
-        {/* Placeholder for a quick summary or recent activity */}
         <Card>
           <CardHeader>
-            <CardTitle>Quick Overview</CardTitle>
+            <CardTitle>{t('quickOverviewTitle')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-foreground/70">Your recent activity and key stats will appear here.</p>
-            {/* Example: Last session details or average relief score */}
+            <p className="text-foreground/70">{t('quickOverviewContent')}</p>
           </CardContent>
         </Card>
       </section>

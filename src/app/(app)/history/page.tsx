@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -41,6 +40,7 @@ import {
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
 import type { ChartConfig } from "@/components/ui/chart";
 import { availableTriggers } from '@/types';
+import { useTranslations } from 'next-intl';
 
 const chartConfig = {
   painIntensity: { label: "Pain Intensity", color: "hsl(var(--chart-1))" },
@@ -57,11 +57,12 @@ const getTriggerNames = (triggerIds: string[]): string => {
   if (!triggerIds || triggerIds.length === 0) return 'N/A';
   return triggerIds.map(id => {
     const trigger = availableTriggers.find(t => t.id === id);
-    return trigger ? trigger.name : id; // Fallback to ID if name not found
+    return trigger ? trigger.name : id;
   }).join(', ');
 };
 
 export default function HistoryPage() {
+  const t = useTranslations('HistoryPage');
   const [sessions, setSessions] = useState<TherapySession[]>([]);
   const [filteredSessions, setFilteredSessions] = useState<TherapySession[]>([]);
   const [dateFilter, setDateFilter] = useState<string>("all");
@@ -161,7 +162,7 @@ export default function HistoryPage() {
       deleteStoredSession(sessionToDelete);
       setSessions(prevSessions => prevSessions.filter(s => s.id !== sessionToDelete));
       setSessionToDelete(null);
-      toast({ title: "Session Deleted", description: "The session has been removed from your history." });
+      toast({ title: t('sessionDeletedToast'), description: t('sessionDeletedDescription') });
     }
     setIsAlertOpen(false);
   };
@@ -175,44 +176,44 @@ export default function HistoryPage() {
     <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline">Session History & Analytics</CardTitle>
-          <CardDescription>Review your past therapy sessions and analyze trends.</CardDescription>
+          <CardTitle className="font-headline">{t('title')}</CardTitle>
+          <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-4 mb-6 p-4 border rounded-lg bg-muted/50">
             <div className="flex-1 min-w-[150px]">
-              <Label htmlFor="dateFilter">Date Range</Label>
+              <Label htmlFor="dateFilter">{t('dateFilterLabel')}</Label>
               <Select value={dateFilter} onValueChange={setDateFilter}>
-                <SelectTrigger id="dateFilter"><SelectValue placeholder="Filter by date" /></SelectTrigger>
+                <SelectTrigger id="dateFilter"><SelectValue placeholder={t('dateFilterPlaceholder')} /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Time</SelectItem>
-                  <SelectItem value="last7">Last 7 Days</SelectItem>
-                  <SelectItem value="last30">Last 30 Days</SelectItem>
-                  <SelectItem value="last90">Last 90 Days</SelectItem>
+                  <SelectItem value="all">{t('dateFilterAll')}</SelectItem>
+                  <SelectItem value="last7">{t('dateFilter7')}</SelectItem>
+                  <SelectItem value="last30">{t('dateFilter30')}</SelectItem>
+                  <SelectItem value="last90">{t('dateFilter90')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="flex-1 min-w-[150px]">
-              <Label htmlFor="painFilter">Pain Level (Pre)</Label>
+              <Label htmlFor="painFilter">{t('painFilterLabel')}</Label>
               <Select value={painFilter} onValueChange={setPainFilter}>
-                <SelectTrigger id="painFilter"><SelectValue placeholder="Filter by pain" /></SelectTrigger>
+                <SelectTrigger id="painFilter"><SelectValue placeholder={t('painFilterPlaceholder')} /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Pain Levels</SelectItem>
-                  <SelectItem value="low">Low (0-3)</SelectItem>
-                  <SelectItem value="medium">Medium (4-6)</SelectItem>
-                  <SelectItem value="high">High (7-10)</SelectItem>
+                  <SelectItem value="all">{t('painFilterAll')}</SelectItem>
+                  <SelectItem value="low">{t('painFilterLow')}</SelectItem>
+                  <SelectItem value="medium">{t('painFilterMedium')}</SelectItem>
+                  <SelectItem value="high">{t('painFilterHigh')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="flex-1 min-w-[150px]">
-              <Label htmlFor="reliefFilter">Relief Score (Post)</Label>
+              <Label htmlFor="reliefFilter">{t('reliefFilterLabel')}</Label>
               <Select value={reliefFilter} onValueChange={setReliefFilter}>
-                <SelectTrigger id="reliefFilter"><SelectValue placeholder="Filter by relief" /></SelectTrigger>
+                <SelectTrigger id="reliefFilter"><SelectValue placeholder={t('reliefFilterPlaceholder')} /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Relief Scores</SelectItem>
-                  <SelectItem value="low">Low (0-3)</SelectItem>
-                  <SelectItem value="medium">Medium (4-7)</SelectItem>
-                  <SelectItem value="high">High (8-10)</SelectItem>
+                  <SelectItem value="all">{t('reliefFilterAll')}</SelectItem>
+                  <SelectItem value="low">{t('reliefFilterLow')}</SelectItem>
+                  <SelectItem value="medium">{t('reliefFilterMedium')}</SelectItem>
+                  <SelectItem value="high">{t('reliefFilterHigh')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -221,7 +222,7 @@ export default function HistoryPage() {
           {filteredSessions.length > 0 && (
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle>Trends Over Time</CardTitle>
+                <CardTitle>{t('trendsTitle')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <ChartContainer config={chartConfig} className="h-[300px] w-full">
@@ -245,7 +246,7 @@ export default function HistoryPage() {
 
           <div className="flex justify-end mb-4">
             <Button onClick={exportToCSV} variant="outline" disabled={filteredSessions.length === 0}>
-              <Download className="mr-2 h-4 w-4" /> Export CSV
+              <Download className="mr-2 h-4 w-4" /> {t('exportButton')}
             </Button>
           </div>
 
@@ -253,14 +254,14 @@ export default function HistoryPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Pain (Pre)</TableHead>
-                  <TableHead>Affected Area</TableHead>
-                  <TableHead>Duration</TableHead>
-                  <TableHead>Relief (Post)</TableHead>
-                  <TableHead>Meds</TableHead>
-                  <TableHead>Details</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead>{t('tableHeadDate')}</TableHead>
+                  <TableHead>{t('tableHeadPain')}</TableHead>
+                  <TableHead>{t('tableHeadArea')}</TableHead>
+                  <TableHead>{t('tableHeadDuration')}</TableHead>
+                  <TableHead>{t('tableHeadRelief')}</TableHead>
+                  <TableHead>{t('tableHeadMeds')}</TableHead>
+                  <TableHead>{t('tableHeadDetails')}</TableHead>
+                  <TableHead>{t('tableHeadActions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -269,16 +270,16 @@ export default function HistoryPage() {
                     <TableCell>{format(parseISO(session.startTime), 'MMM d, yyyy HH:mm')}</TableCell>
                     <TableCell>{session.painIntensity}</TableCell>
                     <TableCell>{formatHeadArea(session.affectedArea)}</TableCell>
-                    <TableCell>{session.actualDuration} min</TableCell>
+                    <TableCell>{session.actualDuration} {t('unitMin')}</TableCell>
                     <TableCell>{session.reliefScore}</TableCell>
-                    <TableCell>{session.medicationTaken ? 'Yes' : 'No'}</TableCell>
+                    <TableCell>{session.medicationTaken ? t('yes') : t('no')}</TableCell>
                     <TableCell>
-                      <Button variant="link" size="sm" onClick={() => handleViewDetails(session)}>View</Button>
+                      <Button variant="link" size="sm" onClick={() => handleViewDetails(session)}>{t('detailsButton')}</Button>
                     </TableCell>
                     <TableCell>
                       <Button variant="ghost" size="icon" onClick={() => handleDeleteInitiation(session.id)}>
                         <Trash2 className="h-4 w-4 text-destructive" />
-                        <span className="sr-only">Delete session</span>
+                        <span className="sr-only">{t('deleteButtonSr')}</span>
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -286,7 +287,7 @@ export default function HistoryPage() {
               </TableBody>
             </Table>
           ) : (
-            <p className="text-center text-muted-foreground py-8">No sessions found matching your criteria. Try adjusting filters or log a new session.</p>
+            <p className="text-center text-muted-foreground py-8">{t('noSessionsMessage')}</p>
           )}
         </CardContent>
       </Card>
@@ -294,14 +295,14 @@ export default function HistoryPage() {
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>{t('confirmDeleteTitle')}</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the session from your history.
+              {t('confirmDeleteDescription')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setIsAlertOpen(false)}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmDelete} className={buttonVariants({ variant: "destructive" })}>Delete</AlertDialogAction>
+            <AlertDialogCancel onClick={() => setIsAlertOpen(false)}>{t('confirmDeleteCancel')}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete} className={buttonVariants({ variant: "destructive" })}>{t('confirmDeleteConfirm')}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -310,59 +311,59 @@ export default function HistoryPage() {
         <Dialog open={isDetailsDialogOpen} onOpenChange={setIsDetailsDialogOpen}>
           <DialogContent className="sm:max-w-lg">
             <DialogHeader>
-              <DialogTitle>Session Details</DialogTitle>
+              <DialogTitle>{t('sessionDetailsTitle')}</DialogTitle>
               <DialogDescription>
-                Session from {format(parseISO(selectedSession.startTime), 'MMMM d, yyyy \'at\' HH:mm')}.
+                {t('sessionDetailsDescription', { date: format(parseISO(selectedSession.startTime), 'MMMM d, yyyy \'at\' HH:mm')})}
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-3 py-4 text-sm max-h-[60vh] overflow-y-auto pr-2">
               <div className="grid grid-cols-[160px_1fr] items-center gap-x-4 gap-y-1">
-                <span className="font-medium text-muted-foreground">Pain Intensity (Pre):</span>
+                <span className="font-medium text-muted-foreground">{t('detailsPain')}</span>
                 <span>{selectedSession.painIntensity}/10</span>
 
-                <span className="font-medium text-muted-foreground">Affected Area:</span>
+                <span className="font-medium text-muted-foreground">{t('detailsArea')}</span>
                 <span>{formatHeadArea(selectedSession.affectedArea)}</span>
 
-                <span className="font-medium text-muted-foreground">Triggers:</span>
+                <span className="font-medium text-muted-foreground">{t('detailsTriggers')}</span>
                 <span>{getTriggerNames(selectedSession.triggers)}</span>
                 
-                <span className="font-medium text-muted-foreground">Rec. Duration:</span>
-                <span>{selectedSession.recommendedDuration} min</span>
+                <span className="font-medium text-muted-foreground">{t('detailsRecDuration')}</span>
+                <span>{selectedSession.recommendedDuration} {t('unitMin')}</span>
 
-                <span className="font-medium text-muted-foreground">Actual Duration:</span>
-                <span>{selectedSession.actualDuration} min</span>
+                <span className="font-medium text-muted-foreground">{t('detailsActualDuration')}</span>
+                <span>{selectedSession.actualDuration} {t('unitMin')}</span>
                 
-                <span className="font-medium text-muted-foreground">End Time:</span>
-                <span>{selectedSession.endTime ? format(parseISO(selectedSession.endTime), 'MMM d, yyyy HH:mm') : 'N/A'}</span>
+                <span className="font-medium text-muted-foreground">{t('detailsEndTime')}</span>
+                <span>{selectedSession.endTime ? format(parseISO(selectedSession.endTime), 'MMM d, yyyy HH:mm') : t('na')}</span>
 
-                <span className="font-medium text-muted-foreground">Relief Score (Post):</span>
+                <span className="font-medium text-muted-foreground">{t('detailsRelief')}</span>
                 <span>{selectedSession.reliefScore}/10</span>
 
-                <span className="font-medium text-muted-foreground">Medication Taken:</span>
-                <span>{selectedSession.medicationTaken ? 'Yes' : 'No'}</span>
+                <span className="font-medium text-muted-foreground">{t('detailsMeds')}</span>
+                <span>{selectedSession.medicationTaken ? t('yes') : t('no')}</span>
               </div>
 
               {selectedSession.preSessionNotes && (
                 <div className="mt-2">
-                  <span className="font-medium text-muted-foreground">Pre-Session Notes:</span>
+                  <span className="font-medium text-muted-foreground">{t('detailsPreNotes')}</span>
                   <p className="mt-1 whitespace-pre-wrap p-2 bg-muted/50 rounded-md">{selectedSession.preSessionNotes}</p>
                 </div>
               )}
               {selectedSession.postSessionNotes && (
                 <div className="mt-2">
-                  <span className="font-medium text-muted-foreground">Post-Session Notes:</span>
+                  <span className="font-medium text-muted-foreground">{t('detailsPostNotes')}</span>
                   <p className="mt-1 whitespace-pre-wrap p-2 bg-muted/50 rounded-md">{selectedSession.postSessionNotes}</p>
                 </div>
               )}
               <div className="mt-3 pt-3 border-t border-border">
-                <span className="font-medium text-muted-foreground">Session ID:</span>
+                <span className="font-medium text-muted-foreground">{t('detailsId')}</span>
                 <span className="block text-xs text-muted-foreground/80 truncate mt-1">{selectedSession.id}</span>
               </div>
             </div>
             <DialogFooter>
               <DialogClose asChild>
                 <Button type="button" variant="outline">
-                  Close
+                  {t('detailsCloseButton')}
                 </Button>
               </DialogClose>
             </DialogFooter>
@@ -372,5 +373,3 @@ export default function HistoryPage() {
     </div>
   );
 }
-
-    

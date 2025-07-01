@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -9,6 +8,7 @@ import { personalizedTherapyRecommendation, type PersonalizedTherapyRecommendati
 import { getStoredSessions, type TherapySession, type HeadArea } from '@/lib/storage';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useTranslations } from 'next-intl';
 
 function formatHeadAreaForAI(area?: HeadArea): string {
   if (!area || area === 'none') return 'N/A';
@@ -34,6 +34,7 @@ function formatSessionHistoryForAI(sessions: TherapySession[]): string {
 
 
 export default function RecommendationsPage() {
+  const t = useTranslations('RecommendationsPage');
   const [sessionHistory, setSessionHistory] = useState<string>('');
   const [recommendations, setRecommendations] = useState<PersonalizedTherapyRecommendationOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +54,7 @@ export default function RecommendationsPage() {
     setRecommendations(null);
 
     if (numSessions < 3) { 
-        setError("At least 3 therapy sessions are needed to generate personalized recommendations. Please log more sessions.");
+        setError(t('errorMinSessions'));
         setIsLoading(false);
         return;
     }
@@ -63,7 +64,7 @@ export default function RecommendationsPage() {
       setRecommendations(result);
     } catch (e) {
       console.error("AI Recommendation Error:", e);
-      setError(`Failed to get recommendations. ${(e as Error).message || 'Please try again later.'}`);
+      setError(t('errorGeneric', { message: (e as Error).message || 'Please try again later.' }));
     } finally {
       setIsLoading(false);
     }
@@ -73,22 +74,22 @@ export default function RecommendationsPage() {
     <div className="max-w-3xl mx-auto space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline flex items-center gap-2"><Wand2 className="h-6 w-6 text-primary" /> AI Personalized Therapy Insights</CardTitle>
-          <CardDescription>Get AI-powered suggestions to optimize your therapy regimen based on your session history.</CardDescription>
+          <CardTitle className="font-headline flex items-center gap-2"><Wand2 className="h-6 w-6 text-primary" /> {t('title')}</CardTitle>
+          <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
-            <h3 className="font-semibold mb-2">Your Session History Summary:</h3>
+            <h3 className="font-semibold mb-2">{t('historySummaryTitle')}</h3>
             <ScrollArea className="h-48 w-full rounded-md border p-3 bg-muted/50">
-              <pre className="text-xs whitespace-pre-wrap">{sessionHistory || "Loading session history..."}</pre>
+              <pre className="text-xs whitespace-pre-wrap">{sessionHistory || t('loadingHistory')}</pre>
             </ScrollArea>
-            <p className="text-xs text-muted-foreground mt-1">{numSessions} session(s) recorded.</p>
+            <p className="text-xs text-muted-foreground mt-1">{t('sessionsRecorded', { count: numSessions })}</p>
           </div>
 
           {error && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
+              <AlertTitle>{t('errorTitle')}</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
@@ -96,24 +97,24 @@ export default function RecommendationsPage() {
           {recommendations && (
             <Card className="bg-primary/10 border-primary">
               <CardHeader>
-                <CardTitle className="text-primary">Personalized Recommendations</CardTitle>
+                <CardTitle className="text-primary">{t('recommendationsTitle')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 text-sm">
                 <div>
-                  <h4 className="font-semibold">Recommended Duration:</h4>
+                  <h4 className="font-semibold">{t('recDuration')}</h4>
                   <p>{recommendations.recommendedDuration}</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold">Recommended Time of Day:</h4>
+                  <h4 className="font-semibold">{t('recTime')}</h4>
                   <p>{recommendations.recommendedTimeOfDay}</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold">Other Adjustments:</h4>
+                  <h4 className="font-semibold">{t('recAdjustments')}</h4>
                   <p className="whitespace-pre-wrap">{recommendations.otherAdjustments}</p>
                 </div>
               </CardContent>
               <CardFooter>
-                <p className="text-xs text-muted-foreground">These are AI-generated suggestions. Always consult with a healthcare professional for medical advice.</p>
+                <p className="text-xs text-muted-foreground">{t('disclaimer')}</p>
               </CardFooter>
             </Card>
           )}
@@ -121,9 +122,9 @@ export default function RecommendationsPage() {
         <CardFooter>
           <Button onClick={handleGetRecommendations} disabled={isLoading || numSessions < 3} className="w-full">
             {isLoading ? (
-              <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating...</>
+              <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('generatingButton')}</>
             ) : (
-              'Get AI Recommendations'
+              t('generateButton')
             )}
           </Button>
         </CardFooter>
@@ -131,10 +132,9 @@ export default function RecommendationsPage() {
        {numSessions < 3 && !recommendations && !isLoading && ( 
          <Alert variant="default" className="border-accent bg-accent/10 text-accent">
             <AlertCircle className="h-4 w-4 text-accent" />
-            <AlertTitle>More Data Needed</AlertTitle>
+            <AlertTitle>{t('moreDataNeededTitle')}</AlertTitle>
             <AlertDescription>
-              The AI needs at least 3 completed therapy sessions to provide meaningful insights. 
-              Keep logging your sessions to unlock personalized recommendations!
+              {t('moreDataNeededDescription')}
             </AlertDescription>
           </Alert>
       )}
