@@ -1,5 +1,5 @@
-# Firebase Studio
+# Migreen
+Your migraine solution, instantly.
 
-This is a NextJS starter in Firebase Studio.
-
-To get started, take a look at src/app/page.tsx.
+(c) Copyright 2025 Andras Baki.
+All rights reserved.
