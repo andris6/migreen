@@ -1,4 +1,4 @@
-// This page is no longer used after removing i18n. The active page is now at src/app/recommendations/page.tsx.
-export default function RecommendationsPage() {
+// This file is no longer used and can be deleted.
+export default function DeprecatedRecommendationsPage() {
   return null;
 }

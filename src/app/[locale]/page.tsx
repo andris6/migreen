@@ -1,4 +1,4 @@
-// This page is no longer used after removing i18n. The active page is now at src/app/page.tsx.
-export default function HomePage() {
+// This file is no longer used and can be deleted.
+export default function DeprecatedHomePage() {
   return null;
 }

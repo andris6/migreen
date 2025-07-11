@@ -1,5 +1,5 @@
-// This file is no longer used after removing i18n. The active error boundary is now at src/app/error.tsx.
-'use client'; 
-export default function Error() {
+'use client';
+// This file is no longer used and can be deleted.
+export default function DeprecatedError() {
   return null;
 }
