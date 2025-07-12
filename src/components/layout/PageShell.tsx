@@ -12,7 +12,7 @@ export default function PageShell({
 }) {
   const pathname = usePathname();
   
-  const isAuthPage = pathname === '/login' || pathname === '/signup';
+  const isAuthPage = pathname === '/login' || pathname === '/signup' || pathname === '/reset-password';
   const isHomePage = pathname === '/';
   const isTherapySessionPage = pathname === '/therapy/session';
   

@@ -6,6 +6,7 @@ import {
   sendPasswordResetEmail,
   verifyPasswordResetCode as fbVerifyPasswordResetCode,
   confirmPasswordReset as fbConfirmPasswordReset,
+  sendEmailVerification,
   type User as FirebaseUser
 } from 'firebase/auth';
 import { auth } from './firebase';
@@ -17,6 +18,7 @@ export async function signUp(email: string, password_plaintext: string): Promise
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password_plaintext);
     const firebaseUser = userCredential.user;
+    await sendEmailVerification(firebaseUser);
     return {
       id: firebaseUser.uid,
       email: firebaseUser.email,
@@ -34,6 +36,11 @@ export async function logIn(email: string, password_plaintext: string): Promise<
    try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password_plaintext);
     const firebaseUser = userCredential.user;
+
+    if (!firebaseUser.emailVerified) {
+        throw new Error('Please verify your email address before logging in. Check your inbox for a verification link.');
+    }
+
     return {
       id: firebaseUser.uid,
       email: firebaseUser.email,
@@ -42,7 +49,7 @@ export async function logIn(email: string, password_plaintext: string): Promise<
     if (error.code === 'auth/invalid-credential') {
         throw new Error('Invalid email or password. Please try again.');
     }
-    throw new Error(error.message || 'An unknown error occurred during login.');
+    throw new Error((error as Error).message || 'An unknown error occurred during login.');
   }
 }
 
@@ -59,7 +66,7 @@ export async function sendPasswordReset(email: string): Promise<void> {
         // Don't throw an error to prevent user enumeration
         return;
     }
-    throw new Error(error.message || 'An unknown error occurred during password reset.');
+    throw new Error((error as Error).message || 'An unknown error occurred during password reset.');
   }
 }
 
@@ -68,7 +75,7 @@ export async function verifyPasswordResetCode(oobCode: string): Promise<string> 
     const email = await fbVerifyPasswordResetCode(auth, oobCode);
     return email;
   } catch (error: any) {
-     throw new Error(error.message || 'Invalid or expired password reset code.');
+     throw new Error((error as Error).message || 'Invalid or expired password reset code.');
   }
 }
 
@@ -76,7 +83,7 @@ export async function confirmPasswordReset(oobCode: string, newPassword_plaintex
     try {
         await fbConfirmPasswordReset(auth, oobCode, newPassword_plaintext);
     } catch (error: any) {
-        throw new Error(error.message || 'Failed to reset password.');
+        throw new Error((error as Error).message || 'Failed to reset password.');
     }
 }
 

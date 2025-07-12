@@ -48,8 +48,8 @@ export default function SignUpPage() {
     try {
       await signUp(data.email, data.password);
       toast({
-        title: 'Account Created',
-        description: "Welcome! Please log in with your new credentials.",
+        title: 'Account Created & Verification Email Sent',
+        description: "Please check your inbox to verify your email, then log in.",
       });
       router.push('/login');
     } catch (error: any) {

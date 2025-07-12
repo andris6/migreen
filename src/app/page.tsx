@@ -13,11 +13,11 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background text-foreground">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground overflow-hidden">
       <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem] dark:bg-slate-950 dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)]">
         <div className="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#38bdf81a,transparent)]"></div>
       </div>
-      <div className="container grid grid-cols-1 items-center gap-12 px-6">
+      <div className="flex-grow flex items-center justify-center container grid grid-cols-1 gap-12 px-6">
         <div className="text-center">
           <Logo className="mb-6 text-5xl justify-center" />
           <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary mb-4 animate-fade-in-down">
@@ -35,6 +35,9 @@ export default function HomePage() {
           </Button>
         </div>
       </div>
+       <footer className="py-4 text-center text-xs text-muted-foreground">
+          Migreen © {new Date().getFullYear()}
+        </footer>
     </div>
   );
 }
