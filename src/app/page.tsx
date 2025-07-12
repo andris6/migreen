@@ -35,9 +35,6 @@ export default function HomePage() {
           </Button>
         </div>
       </div>
-       <footer className="py-4 text-center text-xs text-muted-foreground">
-          Migreen © {new Date().getFullYear()}
-        </footer>
     </div>
   );
 }
