@@ -1,4 +1,5 @@
 
+
 export type HeadArea = "forehead" | "temples" | "eyes" | "back_of_head" | "top_of_head" | "neck" | "none";
 
 export const availableHeadAreas: { id: HeadArea; name: string }[] = [
@@ -57,3 +58,10 @@ export interface User {
   id: string; // Firebase UID
   email: string | null;
 }
+
+// Utility type for Firestore data which may have fields that are not yet populated.
+export type WithFirestoreStubs<T> = {
+  [P in keyof T]?: T[P];
+};
+
+    

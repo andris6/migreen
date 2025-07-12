@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Loader2, Wand2, AlertCircle, Clock, Calendar, ListChecks, Info } from 'lucide-react';
@@ -16,13 +16,20 @@ export default function RecommendationsPage() {
   const [recommendations, setRecommendations] = useState<PersonalizedTherapyRecommendationOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   
   const numSessions = sessionHistory.length;
 
-  useEffect(() => {
-    const sessions = getStoredSessions(user?.id);
+  const loadSessions = useCallback(async () => {
+    setIsLoadingHistory(true);
+    const sessions = await getStoredSessions(user?.id);
     setSessionHistory(sessions);
+    setIsLoadingHistory(false);
   }, [user]);
+
+  useEffect(() => {
+    loadSessions();
+  }, [loadSessions]);
 
   const handleGetRecommendations = async () => {
     setIsLoading(true);
@@ -59,7 +66,7 @@ export default function RecommendationsPage() {
               <Info className="h-4 w-4" />
               <AlertTitle>How It Works</AlertTitle>
               <AlertDescription>
-                Our AI analyzes your recorded session history to identify patterns and provide personalized recommendations. The more sessions you log ({numSessions} recorded so far), the more accurate your insights will be. Your session data is sent for analysis when you click the button below.
+                Our AI analyzes your recorded session history to identify patterns and provide personalized recommendations. The more sessions you log ({isLoadingHistory ? '...' : numSessions} recorded so far), the more accurate your insights will be. Your session data is sent for analysis when you click the button below.
               </AlertDescription>
             </Alert>
 
@@ -104,9 +111,16 @@ export default function RecommendationsPage() {
               </CardFooter>
             </Card>
           )}
+          
+          {isLoadingHistory && (
+             <div className="flex items-center justify-center p-6">
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                <p className="ml-4 text-muted-foreground">Loading session history...</p>
+            </div>
+          )}
 
-          {numSessions < 3 && !recommendations && !isLoading && ( 
-            <Alert variant="default" className="border-accent text-accent">
+          {!isLoadingHistory && numSessions < 3 && !recommendations && !isLoading && ( 
+            <Alert variant="default" className="border-accent text-accent-dark dark:text-accent-foreground">
               <AlertCircle className="h-4 w-4 text-accent" />
               <AlertTitle>More Data Needed</AlertTitle>
               <AlertDescription>
@@ -117,7 +131,7 @@ export default function RecommendationsPage() {
 
         </CardContent>
         <CardFooter>
-          <Button onClick={handleGetRecommendations} disabled={isLoading || numSessions < 3} className="w-full text-lg py-6" size="lg">
+          <Button onClick={handleGetRecommendations} disabled={isLoading || isLoadingHistory || numSessions < 3} className="w-full text-lg py-6" size="lg">
             {isLoading ? (
               <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Generating...</>
             ) : (
@@ -129,3 +143,5 @@ export default function RecommendationsPage() {
     </div>
   );
 }
+
+    

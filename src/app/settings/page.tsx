@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -14,7 +14,7 @@ import type { Settings as AppSettings } from '@/types';
 import { getStoredSettings, storeSettings } from '@/lib/storage';
 import { useToast } from '@/hooks/use-toast';
 import { useTheme } from 'next-themes';
-import { Sun, Moon, Bell, Vibrate } from 'lucide-react';
+import { Sun, Moon, Bell, Vibrate, Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
 const settingsSchema = z.object({
@@ -28,6 +28,7 @@ export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const { user } = useAuth();
   const [mounted, setMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema),
@@ -36,32 +37,55 @@ export default function SettingsPage() {
     },
   });
 
-  useEffect(() => {
-    setMounted(true);
-    const loadedSettings = getStoredSettings(user?.id);
+  const loadSettings = useCallback(async () => {
+    setIsLoading(true);
+    const loadedSettings = await getStoredSettings(user?.id);
     if (loadedSettings) {
       form.reset({
         defaultSessionLength: loadedSettings.defaultSessionLength,
       });
-      // Sync theme from stored settings
       setTheme(loadedSettings.darkMode ? 'dark' : 'light');
     }
+    setIsLoading(false);
   }, [form, user, setTheme]);
 
 
-  const onSubmit = (data: SettingsFormValues) => {
-    const currentSettings = getStoredSettings(user?.id) || { darkMode: theme === 'dark', notificationTime: "15min_before", vibrationFeedback: true };
+  useEffect(() => {
+    setMounted(true);
+    loadSettings();
+  }, [loadSettings]);
+
+
+  const onSubmit = async (data: SettingsFormValues) => {
+    const currentSettings = await getStoredSettings(user?.id) || { darkMode: theme === 'dark', notificationTime: "15min_before", vibrationFeedback: true };
     const newSettings: AppSettings = {
       ...currentSettings,
       defaultSessionLength: data.defaultSessionLength,
       darkMode: theme === 'dark',
     };
-    storeSettings(newSettings, user?.id);
+    await storeSettings(newSettings, user?.id);
     toast({ title: "Settings Saved", description: "Your preferences have been updated." });
   };
+  
+  const handleThemeChange = async (checked: boolean) => {
+      const newTheme = checked ? 'dark' : 'light';
+      setTheme(newTheme);
+      // Immediately save theme change without waiting for form submission
+      const currentSettings = await getStoredSettings(user?.id) || { defaultSessionLength: 30, notificationTime: "15min_before", vibrationFeedback: true };
+      const newSettings: AppSettings = {
+        ...currentSettings,
+        darkMode: newTheme === 'dark',
+      };
+      await storeSettings(newSettings, user?.id);
+  }
 
-  if (!mounted) {
-    return null;
+  if (!mounted || isLoading) {
+    return (
+        <div className="flex items-center justify-center h-full">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="ml-4 text-muted-foreground">Loading settings...</p>
+        </div>
+    );
   }
 
   return (
@@ -104,7 +128,7 @@ export default function SettingsPage() {
               <Switch
                 id="darkModeToggle"
                 checked={theme === 'dark'}
-                onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+                onCheckedChange={handleThemeChange}
                 aria-label="Toggle dark mode"
               />
             </div>
@@ -130,3 +154,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+    

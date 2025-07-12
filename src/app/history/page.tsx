@@ -1,14 +1,14 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import type { TherapySession, HeadArea } from '@/types';
 import { getStoredSessions, deleteStoredSession } from '@/lib/storage';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { format, parseISO } from 'date-fns';
 import { Button, buttonVariants } from '@/components/ui/button';
-import { Download, SlidersHorizontal, Trash2 } from 'lucide-react';
+import { Download, SlidersHorizontal, Trash2, Loader2 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -65,8 +65,10 @@ const getTriggerNames = (triggerIds: string[]): string => {
 
 export default function HistoryPage() {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [sessions, setSessions] = useState<TherapySession[]>([]);
   const [filteredSessions, setFilteredSessions] = useState<TherapySession[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [dateFilter, setDateFilter] = useState<string>("all");
   const [painFilter, setPainFilter] = useState<string>("all");
   const [reliefFilter, setReliefFilter] = useState<string>("all");
@@ -74,12 +76,17 @@ export default function HistoryPage() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [selectedSession, setSelectedSession] = useState<TherapySession | null>(null);
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
-  const { toast } = useToast();
+
+  const loadSessions = useCallback(async () => {
+    setIsLoading(true);
+    const loadedSessions = await getStoredSessions(user?.id);
+    setSessions(loadedSessions);
+    setIsLoading(false);
+  }, [user]);
 
   useEffect(() => {
-    const loadedSessions = getStoredSessions(user?.id);
-    setSessions(loadedSessions);
-  }, [user]);
+    loadSessions();
+  }, [loadSessions]);
 
   useEffect(() => {
     let tempSessions = [...sessions];
@@ -160,20 +167,36 @@ export default function HistoryPage() {
     setIsAlertOpen(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (sessionToDelete) {
-      deleteStoredSession(sessionToDelete, user?.id);
-      setSessions(prevSessions => prevSessions.filter(s => s.id !== sessionToDelete));
-      setSessionToDelete(null);
-      toast({ title: "Session Deleted", description: "The session has been removed from your history." });
+      try {
+        await deleteStoredSession(sessionToDelete, user?.id);
+        setSessions(prevSessions => prevSessions.filter(s => s.id !== sessionToDelete));
+        toast({ title: "Session Deleted", description: "The session has been removed from your history." });
+      } catch (error) {
+        toast({ title: "Error", description: "Failed to delete session.", variant: "destructive" });
+      } finally {
+        setSessionToDelete(null);
+        setIsAlertOpen(false);
+      }
+    } else {
+       setIsAlertOpen(false);
     }
-    setIsAlertOpen(false);
   };
 
   const handleViewDetails = (session: TherapySession) => {
     setSelectedSession(session);
     setIsDetailsDialogOpen(true);
   };
+  
+  if (isLoading) {
+    return (
+        <div className="flex items-center justify-center h-full">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="ml-4 text-muted-foreground">Loading session history...</p>
+        </div>
+    )
+  }
 
   return (
     <div className="space-y-8">
@@ -385,3 +408,5 @@ export default function HistoryPage() {
     </div>
   );
 }
+
+    

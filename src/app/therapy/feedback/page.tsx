@@ -16,6 +16,7 @@ import type { PreSessionData, TherapySession } from '@/types';
 import { storeSession } from '@/lib/storage';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   reliefScore: z.number().min(0).max(10),
@@ -32,6 +33,7 @@ export default function FeedbackPage() {
   const [preSessionData, setPreSessionData] = useState<PreSessionData | null>(null);
   const [actualDuration, setActualDuration] = useState<number | null>(null);
   const [sessionStartTime, setSessionStartTime] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<PostSessionFormValues>({
     resolver: zodResolver(formSchema),
@@ -57,9 +59,11 @@ export default function FeedbackPage() {
     }
   }, [router, toast]);
 
-  const onSubmit = (data: PostSessionFormValues) => {
+  const onSubmit = async (data: PostSessionFormValues) => {
+    setIsSubmitting(true);
     if (!preSessionData || actualDuration === null || sessionStartTime === null) {
       toast({ title: "Error", description: "Could not save session. Critical data missing.", variant: "destructive" });
+      setIsSubmitting(false);
       return;
     }
 
@@ -74,14 +78,20 @@ export default function FeedbackPage() {
       endTime: new Date().toISOString(),
     };
 
-    storeSession(therapySession, user?.id);
-    toast({ title: "Session Saved", description: "Your therapy session has been logged." });
+    try {
+      await storeSession(therapySession, user?.id);
+      toast({ title: "Session Saved", description: "Your therapy session has been logged." });
 
-    sessionStorage.removeItem('preSessionData');
-    sessionStorage.removeItem('actualDuration');
-    sessionStorage.removeItem('sessionStartTime');
-    
-    router.push('/history');
+      sessionStorage.removeItem('preSessionData');
+      sessionStorage.removeItem('actualDuration');
+      sessionStorage.removeItem('sessionStartTime');
+      
+      router.push('/history');
+    } catch(error) {
+       toast({ title: "Error", description: "Failed to save your session. Please try again.", variant: "destructive" });
+    } finally {
+        setIsSubmitting(false);
+    }
   };
 
   if (!preSessionData || actualDuration === null) {
@@ -115,6 +125,7 @@ export default function FeedbackPage() {
                     value={[field.value]}
                     onValueChange={(value) => field.onChange(value[0])}
                     aria-label="Relief score slider"
+                    disabled={isSubmitting}
                   />
                 )}
               />
@@ -131,6 +142,7 @@ export default function FeedbackPage() {
                     checked={field.value}
                     onCheckedChange={field.onChange}
                     aria-label="Medication taken switch"
+                    disabled={isSubmitting}
                   />
                 )}
               />
@@ -147,6 +159,7 @@ export default function FeedbackPage() {
                     placeholder="Any changes noticed, side effects, etc."
                     {...field}
                     className="min-h-[100px]"
+                    disabled={isSubmitting}
                   />
                 )}
               />
@@ -155,7 +168,8 @@ export default function FeedbackPage() {
               )}
             </div>
 
-            <Button type="submit" className="w-full text-lg py-6">
+            <Button type="submit" className="w-full text-lg py-6" disabled={isSubmitting}>
+              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Save Session & View History
             </Button>
           </form>
@@ -164,3 +178,5 @@ export default function FeedbackPage() {
     </div>
   );
 }
+
+    
