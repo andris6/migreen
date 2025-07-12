@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
@@ -5,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import type { PreSessionData } from '@/types';
 import { Button } from '@/components/ui/button';
 
-const GREEN_LIGHT_COLOR = '#40bf80';
+const GREEN_LIGHT_COLOR = '#00FF00';
 
 export default function TherapySessionPage() {
   const router = useRouter();
