@@ -3,6 +3,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail,
   type User as FirebaseUser
 } from 'firebase/auth';
 import { auth } from './firebase';
@@ -21,7 +22,7 @@ export async function signUp(email: string, password_plaintext: string): Promise
   } catch (error: any) {
     // Firebase provides specific error codes, you can handle them here
     // e.g., error.code === 'auth/email-already-in-use'
-    throw new Error(error.message || 'An unknown error occurred during sign up.');
+    throw error;
   }
 }
 
@@ -42,6 +43,16 @@ export async function logIn(email: string, password_plaintext: string): Promise<
 export async function logOut(): Promise<void> {
   await signOut(auth);
 }
+
+export async function sendPasswordReset(email: string): Promise<void> {
+  try {
+    await sendPasswordResetEmail(auth, email);
+  } catch (error: any) {
+    // Handle errors like 'auth/user-not-found'
+    throw new Error(error.message || 'An unknown error occurred during password reset.');
+  }
+}
+
 
 export function getCurrentUser(): FirebaseUser | null {
   return auth.currentUser;
