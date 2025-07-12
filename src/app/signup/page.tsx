@@ -52,12 +52,20 @@ export default function SignUpPage() {
         description: "Welcome! Please log in with your new credentials.",
       });
       router.push('/login');
-    } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Sign Up Failed',
-        description: (error as Error).message,
-      });
+    } catch (error: any) {
+      if (error.code === 'auth/email-already-in-use') {
+        toast({
+          variant: 'destructive',
+          title: 'Email Already Registered',
+          description: 'An account with this email already exists. Please log in instead.',
+        });
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Sign Up Failed',
+          description: error.message || 'An unknown error occurred.',
+        });
+      }
       setIsLoading(false);
     }
   };
@@ -112,7 +120,7 @@ export default function SignUpPage() {
             </p>
           </CardFooter>
         </form>
-      </Card>
+      </card>
     </div>
   );
 }
