@@ -120,7 +120,7 @@ export default function SignUpPage() {
             </p>
           </CardFooter>
         </form>
-      </card>
+      </Card>
     </div>
   );
 }
