@@ -59,6 +59,7 @@ const personalizedTherapyRecommendationPrompt = ai.definePrompt({
   },
   output: {
     schema: PersonalizedTherapyRecommendationOutputSchema,
+    format: 'json',
   },
   prompt: `You are a caring and empathetic AI assistant for Migreen, a migraine therapy app. Your goal is to help users find relief by analyzing their session history.
 

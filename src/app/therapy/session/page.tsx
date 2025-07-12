@@ -4,8 +4,6 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import type { PreSessionData } from '@/types';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
 
 const GREEN_LIGHT_COLOR = '#40bf80';
 
@@ -125,20 +123,6 @@ export default function TherapySessionPage() {
           Exit Session
         </Button>
       </div>
-
-      <Card className="absolute top-4 right-4 bg-black/20 backdrop-blur-md border-white/40 text-white max-w-sm shadow-lg">
-        <CardContent className="p-4">
-          <div className="flex items-start space-x-3">
-            <AlertTriangle className="h-6 w-6 mt-0.5 text-yellow-300 flex-shrink-0" />
-            <div>
-              <h3 className="text-base font-semibold">Important</h3>
-              <p className="text-sm">
-                Keep this screen active. Do not navigate away or lock your device. Relax and focus on the green light.
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
