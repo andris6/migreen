@@ -8,10 +8,10 @@ import { Menu, Settings, Sun, Moon, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import NavLinks from './NavLinks';
+import NavLinks from '@/components/layout/NavLinks';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
-import { Separator } from '../ui/separator';
+import { Separator } from '@/components/ui/separator';
 
 interface HeaderProps {
   className?: string;
