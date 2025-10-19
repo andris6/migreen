@@ -3,7 +3,7 @@
 
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Header } from './Header';
+import { Header } from '@/components/layout/Header';
 
 export default function PageShell({
   children,
