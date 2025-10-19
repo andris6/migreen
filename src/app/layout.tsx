@@ -5,7 +5,6 @@ import { Toaster } from "@/components/ui/toaster";
 import ThemeProvider from '@/components/layout/ThemeProvider';
 import PageShell from '@/components/layout/PageShell';
 import { PT_Sans } from 'next/font/google';
-import { AuthProvider } from '@/hooks/useAuth';
 
 const ptSans = PT_Sans({ 
   subsets: ['latin'], 
@@ -32,12 +31,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AuthProvider>
-            <PageShell>
-              {children}
-            </PageShell>
-            <Toaster />
-          </AuthProvider>
+          <PageShell>
+            {children}
+          </PageShell>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
