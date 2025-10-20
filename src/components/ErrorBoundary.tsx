@@ -35,7 +35,7 @@ class ErrorBoundary extends Component<Props, State> {
       return (
         <Dialog open={this.state.hasError}>
           <DialogContent 
-            className="sm:max-w-[425px] border-0 bg-secondary"
+            className="sm:max-w-[425px] border-0 bg-secondary focus:outline-none focus:ring-0"
             hideCloseButton={true}
           >
             <DialogHeader>
