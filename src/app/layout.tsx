@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import ThemeProvider from '@/components/layout/ThemeProvider';
 import PageShell from '@/components/layout/PageShell';
 import { PT_Sans } from 'next/font/google';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 const ptSans = PT_Sans({ 
   subsets: ['latin'], 
@@ -31,9 +32,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <PageShell>
-            {children}
-          </PageShell>
+          <ErrorBoundary>
+            <PageShell>
+              {children}
+            </PageShell>
+          </ErrorBoundary>
           <Toaster />
         </ThemeProvider>
       </body>
