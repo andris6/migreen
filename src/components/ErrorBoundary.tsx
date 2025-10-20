@@ -1,7 +1,16 @@
-
 'use client';
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Logo } from '@/components/layout/Logo';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from '@/components/ui/button';
 
 interface Props {
   children: ReactNode;
@@ -17,23 +26,36 @@ class ErrorBoundary extends Component<Props, State> {
   };
 
   public static getDerivedStateFromError(_: Error): State {
-    // Update state so the next render will show the fallback UI.
     return { hasError: true };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // You can also log the error to an error reporting service
     console.error('Uncaught error:', error, errorInfo);
   }
 
+  private handleReload = () => {
+    window.location.reload();
+  };
+
   public render() {
     if (this.state.hasError) {
-      // You can render any custom fallback UI
       return (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', fontFamily: 'sans-serif' }}>
-              <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Something went wrong.</h1>
-              <p style={{ fontSize: '1.2rem', color: '#666' }}>We are sorry for the inconvenience. Please try refreshing the page.</p>
-          </div>
+        <Dialog open={this.state.hasError} onOpenChange={() => this.setState({ hasError: false })}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle className="flex flex-col items-center justify-center text-center">
+                <Logo className="mb-6 text-5xl justify-center" />
+                Something went wrong.
+              </DialogTitle>
+              <DialogDescription className="text-center">
+                An unexpected error occurred. Please reload the page to continue.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button onClick={this.handleReload} className="w-full">Reload</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       );
     }
 

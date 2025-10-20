@@ -23,10 +23,18 @@ import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Logo } from '@/components/layout/Logo';
 
-const formSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email address.' }),
-  password: z.string().min(8, { message: 'Password must be at least 8 characters long.' }),
-});
+const formSchema = z
+  .object({
+    email: z.string().email({ message: 'Please enter a valid email address.' }),
+    password: z
+      .string()
+      .min(8, { message: 'Password must be at least 8 characters long.' }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
 
 type SignUpFormValues = z.infer<typeof formSchema>;
 
@@ -40,6 +48,7 @@ export default function SignUpPage() {
     defaultValues: {
       email: '',
       password: '',
+      confirmPassword: '',
     },
   });
 
@@ -49,7 +58,8 @@ export default function SignUpPage() {
       await signUp(data.email, data.password);
       toast({
         title: 'Account Created & Verification Email Sent',
-        description: "Please check your inbox to verify your email, then log in.",
+        description:
+          'Please check your inbox to verify your email, then log in.',
       });
       router.push('/login');
     } catch (error: any) {
@@ -57,7 +67,8 @@ export default function SignUpPage() {
         toast({
           variant: 'destructive',
           title: 'Email Already Registered',
-          description: 'An account with this email already exists. Please log in instead.',
+          description:
+            'An account with this email already exists. Please log in instead.',
         });
       } else {
         toast({
@@ -75,8 +86,12 @@ export default function SignUpPage() {
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <Logo className="mb-4 justify-center" />
-          <CardTitle className="text-2xl font-headline">Create an Account</CardTitle>
-          <CardDescription>Start your journey to migraine relief today.</CardDescription>
+          <CardTitle className="text-2xl font-headline">
+            Create an Account
+          </CardTitle>
+          <CardDescription>
+            Start your journey to migraine relief today.
+          </CardDescription>
         </CardHeader>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
@@ -90,7 +105,9 @@ export default function SignUpPage() {
                 disabled={isLoading}
               />
               {form.formState.errors.email && (
-                <p className="text-sm text-destructive">{form.formState.errors.email.message}</p>
+                <p className="text-sm text-destructive">
+                  {form.formState.errors.email.message}
+                </p>
               )}
             </div>
             <div className="space-y-2">
@@ -103,7 +120,24 @@ export default function SignUpPage() {
                 disabled={isLoading}
               />
               {form.formState.errors.password && (
-                <p className="text-sm text-destructive">{form.formState.errors.password.message}</p>
+                <p className="text-sm text-destructive">
+                  {form.formState.errors.password.message}
+                </p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                placeholder="••••••••"
+                {...form.register('confirmPassword')}
+                disabled={isLoading}
+              />
+              {form.formState.errors.confirmPassword && (
+                <p className="text-sm text-destructive">
+                  {form.formState.errors.confirmPassword.message}
+                </p>
               )}
             </div>
           </CardContent>
@@ -114,7 +148,10 @@ export default function SignUpPage() {
             </Button>
             <p className="text-sm text-muted-foreground">
               Already have an account?{' '}
-              <Link href="/login" className="font-medium text-primary hover:underline">
+              <Link
+                href="/login"
+                className="font-medium text-primary hover:underline"
+              >
                 Log in
               </Link>
             </p>

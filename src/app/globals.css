@@ -103,4 +103,9 @@
       transform: translateY(0);
     }
   }
+
+  /* Custom styles for Dialog Overlay */
+  .dialog-overlay-custom {
+    @apply bg-background/80 backdrop-blur-sm;
+  }
 }
