@@ -14,7 +14,7 @@ const firebaseConfig = process.env.FIREBASE_WEBAPP_CONFIG
     };
 
 if (!firebaseConfig.apiKey) {
-  throw new Error('NEXT_PUBLIC_FIREBASE_API_KEY is not set. Please add it to your environment variables. If you are using a .env.local file, make sure to restart your development server.');
+  throw new Error('NEXT_PUBLIC_FIREBASE_API_KEY not found.');
 }
 
 // Initialize Firebase
